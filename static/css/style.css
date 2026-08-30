@@ -1,24 +1,38 @@
 :root {
-  --bg: #ffffff;
-  --fg: #1c2129;
-  --muted: #5b6472;
-  --border: #e4e8ee;
-  --accent: #2563eb;
-  --code-bg: #f4f6f9;
+  --bg: #fbfbf9;
+  --fg: #1b1e24;
+  --muted: #656b76;
+  --border: #e3e1db;
+  --accent: #0d9488;
+  --accent-2: #d97706;
+  --code-bg: #f2f1ec;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14171c;
-    --fg: #e6e9ef;
-    --muted: #9aa4b2;
-    --border: #2a2f38;
-    --accent: #6ea8fe;
-    --code-bg: #1b1f26;
+  :root:not([data-theme="light"]) {
+    --bg: #14161a;
+    --fg: #e8e6e1;
+    --muted: #96938c;
+    --border: #292c31;
+    --accent: #2dd4bf;
+    --accent-2: #fbbf24;
+    --code-bg: #1b1e23;
   }
 }
 
+:root[data-theme="dark"] {
+  --bg: #14161a;
+  --fg: #e8e6e1;
+  --muted: #96938c;
+  --border: #292c31;
+  --accent: #2dd4bf;
+  --accent-2: #fbbf24;
+  --code-bg: #1b1e23;
+}
+
 * { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
   max-width: 42rem;
@@ -29,26 +43,42 @@ body {
   font-size: 1.05rem;
   color: var(--fg);
   background: var(--bg);
+  transition: background-color .2s ease, color .2s ease;
 }
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+::selection { background: var(--accent); color: var(--bg); }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-h1, h2, h3 {
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
+h1, h2, h3 { line-height: 1.3; }
+
 h1.title {
-  font-size: 1.9rem;
+  font-family: ui-serif, Georgia, "Iowan Old Style", serif;
+  font-size: 2.1rem;
+  letter-spacing: -0.015em;
   margin-bottom: 0.3rem;
 }
 
 h2 {
-  font-size: 1.3rem;
-  margin-top: 2.2rem;
-  padding-top: 0.6rem;
+  font-size: 1.25rem;
+  margin-top: 2.4rem;
+  padding-top: 0.7rem;
   border-top: 1px solid var(--border);
+  letter-spacing: -0.005em;
 }
 
 pre, code {
@@ -59,9 +89,10 @@ pre, code {
 pre {
   background: var(--code-bg);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
   padding: 0.9rem 1rem;
   overflow-x: auto;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 code {
@@ -74,8 +105,9 @@ pre code { background: none; padding: 0; }
 
 nav.howto-nav {
   display: flex;
+  align-items: center;
   gap: 1.25rem;
-  margin-bottom: 2.5rem;
+  margin: 1rem 0 2.5rem;
   padding-bottom: 0.9rem;
   border-bottom: 1px solid var(--border);
   font-size: 0.95rem;
@@ -85,6 +117,38 @@ nav.howto-nav {
 
 nav.howto-nav a { color: var(--muted); }
 nav.howto-nav a:hover { color: var(--accent); text-decoration: none; }
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff !important;
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+#theme-toggle {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: none;
+  letter-spacing: normal;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
 #postamble {
   margin-top: 3.5rem;
@@ -107,7 +171,26 @@ nav.howto-nav a:hover { color: var(--accent); text-decoration: none; }
 
 #table-of-contents ul { margin: 0.3rem 0; }
 
-ul.org-ul li { margin: 0.5rem 0; }
+#content > ul.org-ul {
+  list-style: none;
+  padding: 0;
+}
+
+#content > ul.org-ul > li {
+  padding: 0.9rem 1.1rem;
+  margin: 0.6rem 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: transform .15s ease, border-color .15s ease, background-color .15s ease;
+}
+
+#content > ul.org-ul > li:hover {
+  border-color: var(--accent);
+  background: var(--code-bg);
+  transform: translateX(4px);
+}
+
+#content > ul.org-ul > li a { font-weight: 600; text-decoration: none; }
 
 blockquote {
   border-left: 3px solid var(--accent);

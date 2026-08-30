@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 16:02 -->
+<!-- 2026-08-30 So. 16:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>What a GPG key is actually good for</title>
@@ -193,11 +193,11 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E"/>
+<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="howto-nav"><a href="index.html">Home</a> · <a href="about.html">About</a> · <a href="https://github.com/Chimik-IT">GitHub</a></nav>
+<nav class="howto-nav"><a href="index.html" class="logo">C</a><a href="index.html">Home</a> · <a href="about.html">About</a> · <a href="https://github.com/Chimik-IT">GitHub</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
 <h1 class="title">What a GPG key is actually good for</h1>
@@ -205,17 +205,17 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org01269d7">Why bother with GPG at all</a></li>
-<li><a href="#org1727bac">Generating a key</a></li>
-<li><a href="#org3444d0e">Using it with <code>pass</code></a></li>
-<li><a href="#orgdb878a6">Using it for commit signing</a></li>
-<li><a href="#org451fb19">Why one key for both</a></li>
+<li><a href="#org41c1a55">Why bother with GPG at all</a></li>
+<li><a href="#org9e45cf8">Generating a key</a></li>
+<li><a href="#org533c479">Using it with <code>pass</code></a></li>
+<li><a href="#orgfecc0e0">Using it for commit signing</a></li>
+<li><a href="#orgd835b20">Why one key for both</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org01269d7" class="outline-2">
-<h2 id="org01269d7">Why bother with GPG at all</h2>
-<div class="outline-text-2" id="text-org01269d7">
+<div id="outline-container-org41c1a55" class="outline-2">
+<h2 id="org41c1a55">Why bother with GPG at all</h2>
+<div class="outline-text-2" id="text-org41c1a55">
 <p>
 Most people meet GPG once, to encrypt an email nobody else encrypts either,
 and never touch it again. That undersells it badly. A single GPG keypair
@@ -225,9 +225,9 @@ proves authorship.
 </p>
 </div>
 </div>
-<div id="outline-container-org1727bac" class="outline-2">
-<h2 id="org1727bac">Generating a key</h2>
-<div class="outline-text-2" id="text-org1727bac">
+<div id="outline-container-org9e45cf8" class="outline-2">
+<h2 id="org9e45cf8">Generating a key</h2>
+<div class="outline-text-2" id="text-org9e45cf8">
 <div class="org-src-container">
 <pre class="src src-bash">gpg --full-generate-key
 </pre>
@@ -249,9 +249,9 @@ List it:
 </div>
 </div>
 </div>
-<div id="outline-container-org3444d0e" class="outline-2">
-<h2 id="org3444d0e">Using it with <code>pass</code></h2>
-<div class="outline-text-2" id="text-org3444d0e">
+<div id="outline-container-org533c479" class="outline-2">
+<h2 id="org533c479">Using it with <code>pass</code></h2>
+<div class="outline-text-2" id="text-org533c479">
 <p>
 <a href="https://www.passwordstore.org/">pass</a> is "the standard unix password
 manager" — a thin wrapper around GPG-encrypted text files, versioned with
@@ -273,9 +273,9 @@ you'd sync any other git repo.
 </p>
 </div>
 </div>
-<div id="outline-container-orgdb878a6" class="outline-2">
-<h2 id="orgdb878a6">Using it for commit signing</h2>
-<div class="outline-text-2" id="text-orgdb878a6">
+<div id="outline-container-orgfecc0e0" class="outline-2">
+<h2 id="orgfecc0e0">Using it for commit signing</h2>
+<div class="outline-text-2" id="text-orgfecc0e0">
 <p>
 Same key, different purpose: proving that a commit actually came from you,
 not from someone who pushed under your name.
@@ -308,9 +308,9 @@ the platform (Settings → GPG Keys). Export it with:
 </div>
 </div>
 </div>
-<div id="outline-container-org451fb19" class="outline-2">
-<h2 id="org451fb19">Why one key for both</h2>
-<div class="outline-text-2" id="text-org451fb19">
+<div id="outline-container-orgd835b20" class="outline-2">
+<h2 id="orgd835b20">Why one key for both</h2>
+<div class="outline-text-2" id="text-orgd835b20">
 <p>
 It's not strictly necessary — you could keep a dedicated signing key and
 a dedicated encryption key. But for a personal setup, one identity that
@@ -322,7 +322,7 @@ certificate, one thing to protect.
 </div>
 </div>
 <div id="postamble" class="status">
-<p>Tobias Yang (楊濤比) — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p>
+<p>Tobias Yang (楊濤比) — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p><script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;function apply(t){document.documentElement.setAttribute('data-theme',t);}b.addEventListener('click',function(){var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var now=document.documentElement.getAttribute('data-theme')||sys;var next=now==='dark'?'light':'dark';apply(next);localStorage.setItem('theme',next);});})();</script>
 </div>
 </body>
 </html>

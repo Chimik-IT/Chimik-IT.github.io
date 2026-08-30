@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 16:02 -->
+<!-- 2026-08-30 So. 16:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Homebrew without admin — and getting the PATH right</title>
@@ -193,11 +193,11 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E"/>
+<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="howto-nav"><a href="index.html">Home</a> · <a href="about.html">About</a> · <a href="https://github.com/Chimik-IT">GitHub</a></nav>
+<nav class="howto-nav"><a href="index.html" class="logo">C</a><a href="index.html">Home</a> · <a href="about.html">About</a> · <a href="https://github.com/Chimik-IT">GitHub</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
 <h1 class="title">Homebrew without admin — and getting the PATH right</h1>
@@ -205,18 +205,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org392fce3">The problem</a></li>
-<li><a href="#orgfcd9ac2">Installing into your own prefix</a></li>
-<li><a href="#orge909ec1">Wiring up the environment</a></li>
-<li><a href="#orga6b3cc8">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#org24f01af">PATH ordering — be deliberate</a></li>
-<li><a href="#org7ca7c47">Why this is worth doing</a></li>
+<li><a href="#org97c1b05">The problem</a></li>
+<li><a href="#org715382b">Installing into your own prefix</a></li>
+<li><a href="#org40e8e12">Wiring up the environment</a></li>
+<li><a href="#org5114d10">The catch: you lose most prebuilt bottles</a></li>
+<li><a href="#org7a0bb60">PATH ordering — be deliberate</a></li>
+<li><a href="#org6ade23b">Why this is worth doing</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org392fce3" class="outline-2">
-<h2 id="org392fce3">The problem</h2>
-<div class="outline-text-2" id="text-org392fce3">
+<div id="outline-container-org97c1b05" class="outline-2">
+<h2 id="org97c1b05">The problem</h2>
+<div class="outline-text-2" id="text-org97c1b05">
 <p>
 Corporate-managed MacBooks — MDM-enrolled, no local admin, IT owns
 <code>sudo</code> — still leave you wanting a real package manager for dev tooling.
@@ -228,9 +228,9 @@ thing anywhere your own account can write — no admin required.
 </p>
 </div>
 </div>
-<div id="outline-container-orgfcd9ac2" class="outline-2">
-<h2 id="orgfcd9ac2">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-orgfcd9ac2">
+<div id="outline-container-org715382b" class="outline-2">
+<h2 id="org715382b">Installing into your own prefix</h2>
+<div class="outline-text-2" id="text-org715382b">
 <p>
 No installer script, no root — just clone it into somewhere under your
 home directory:
@@ -247,9 +247,9 @@ nothing that needs IT approval.
 </p>
 </div>
 </div>
-<div id="outline-container-orge909ec1" class="outline-2">
-<h2 id="orge909ec1">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-orge909ec1">
+<div id="outline-container-org40e8e12" class="outline-2">
+<h2 id="org40e8e12">Wiring up the environment</h2>
+<div class="outline-text-2" id="text-org40e8e12">
 <p>
 Homebrew ships a helper that prints the exact environment it needs —
 don't hand-roll this:
@@ -284,9 +284,9 @@ brew --prefix
 </div>
 </div>
 </div>
-<div id="outline-container-orga6b3cc8" class="outline-2">
-<h2 id="orga6b3cc8">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-orga6b3cc8">
+<div id="outline-container-org5114d10" class="outline-2">
+<h2 id="org5114d10">The catch: you lose most prebuilt bottles</h2>
+<div class="outline-text-2" id="text-org5114d10">
 <p>
 Homebrew's precompiled binaries ("bottles") are built assuming the
 default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>). Install into
@@ -308,9 +308,9 @@ push CLT by default precisely because so much tooling depends on it.
 </p>
 </div>
 </div>
-<div id="outline-container-org24f01af" class="outline-2">
-<h2 id="org24f01af">PATH ordering — be deliberate</h2>
-<div class="outline-text-2" id="text-org24f01af">
+<div id="outline-container-org7a0bb60" class="outline-2">
+<h2 id="org7a0bb60">PATH ordering — be deliberate</h2>
+<div class="outline-text-2" id="text-org7a0bb60">
 <p>
 <code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
 shadow system ones with the same name — usually what you want for dev
@@ -322,9 +322,9 @@ you're still calling the wrapped version.
 </p>
 </div>
 </div>
-<div id="outline-container-org7ca7c47" class="outline-2">
-<h2 id="org7ca7c47">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-org7ca7c47">
+<div id="outline-container-org6ade23b" class="outline-2">
+<h2 id="org6ade23b">Why this is worth doing</h2>
+<div class="outline-text-2" id="text-org6ade23b">
 <p>
 Same motivation as the GPG/pass setup: one lightweight mechanism, no
 admin rights needed, no server, no vendor tie-in — just files under your
@@ -335,7 +335,7 @@ delete without filing a ticket.
 </div>
 </div>
 <div id="postamble" class="status">
-<p>Tobias Yang (楊濤比) — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p>
+<p>Tobias Yang (楊濤比) — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p><script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;function apply(t){document.documentElement.setAttribute('data-theme',t);}b.addEventListener('click',function(){var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var now=document.documentElement.getAttribute('data-theme')||sys;var next=now==='dark'?'light':'dark';apply(next);localStorage.setItem('theme',next);});})();</script>
 </div>
 </body>
 </html>

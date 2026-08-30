@@ -17,11 +17,31 @@
 
 (defun chimik-it--preamble (_plist)
   "Navigation oben auf jeder Seite."
-  "<nav class=\"howto-nav\"><a href=\"index.html\">Home</a> · <a href=\"about.html\">About</a> · <a href=\"https://github.com/Chimik-IT\">GitHub</a></nav>")
+  (concat "<nav class=\"howto-nav\">"
+          "<a href=\"index.html\" class=\"logo\">C</a>"
+          "<a href=\"index.html\">Home</a> · "
+          "<a href=\"about.html\">About</a> · "
+          "<a href=\"https://github.com/Chimik-IT\">GitHub</a>"
+          "<button id=\"theme-toggle\" aria-label=\"Toggle color theme\">◐</button>"
+          "</nav>"))
+
+(defconst chimik-it--theme-script
+  (concat "<script>(function(){"
+          "var b=document.getElementById('theme-toggle');if(!b)return;"
+          "function apply(t){document.documentElement.setAttribute('data-theme',t);}"
+          "b.addEventListener('click',function(){"
+          "var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';"
+          "var now=document.documentElement.getAttribute('data-theme')||sys;"
+          "var next=now==='dark'?'light':'dark';"
+          "apply(next);localStorage.setItem('theme',next);"
+          "});"
+          "})();</script>")
+  "Klick-Handler für den Theme-Toggle-Button.")
 
 (defun chimik-it--postamble (_plist)
   "Footer auf jeder Seite."
-  "<p>Tobias Yang (楊濤比) — <a href=\"https://github.com/Chimik-IT\">github.com/Chimik-IT</a></p>")
+  (concat "<p>Tobias Yang (楊濤比) — <a href=\"https://github.com/Chimik-IT\">github.com/Chimik-IT</a></p>"
+          chimik-it--theme-script))
 
 (defconst chimik-it--favicon
   (concat "<link rel=\"icon\" href=\"data:image/svg+xml,"
@@ -32,9 +52,17 @@
           "%3C/svg%3E\"/>")
   "Inline SVG Favicon, kein externer Request nötig.")
 
+(defconst chimik-it--theme-early-script
+  (concat "<script>(function(){"
+          "var t=localStorage.getItem('theme');"
+          "if(t)document.documentElement.setAttribute('data-theme',t);"
+          "})();</script>")
+  "Setzt data-theme vor dem ersten Paint, verhindert Flackern.")
+
 (defconst chimik-it--html-head
   (concat "<link rel=\"stylesheet\" href=\"static/css/style.css\" type=\"text/css\"/>"
-          chimik-it--favicon))
+          chimik-it--favicon
+          chimik-it--theme-early-script))
 
 (defun chimik-it--org-date-keyword (file)
   "Liest #+DATE: wörtlich aus FILE, ohne Cache/mtime-Fallback."
