@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 16:22 -->
+<!-- 2026-08-30 So. 19:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Homebrew without admin: getting the PATH right</title>
+<title>What a GPG key is actually good for</title>
 <meta name="author" content="Tobias Yang" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
@@ -193,143 +193,130 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="../static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="../static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="howto-nav"><a href="index.html" class="logo"><img src="static/favicon.png" alt="Logo"/></a><a href="about.html">About</a> · <a href="https://github.com/Chimik-IT">GitHub</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
+<nav class="howto-nav"><a href="../index.html" class="logo"><img src="../static/favicon.png" alt="Logo"/></a><a href="https://github.com/Chimik-IT">About</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
-<h1 class="title">Homebrew without admin: getting the PATH right</h1>
+<h1 class="title">What a GPG key is actually good for</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org51ec0c5">The problem</a></li>
-<li><a href="#org8c250f9">Installing into your own prefix</a></li>
-<li><a href="#org6c64085">Wiring up the environment</a></li>
-<li><a href="#org23f128f">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#orgae6b826">PATH ordering: be deliberate</a></li>
-<li><a href="#org5aaf63a">Why this is worth doing</a></li>
+<li><a href="#org9689d56">Why bother with GPG at all</a></li>
+<li><a href="#orgbb637a8">Generating a key</a></li>
+<li><a href="#org1277ddb">Using it with <code>pass</code></a></li>
+<li><a href="#org8dc9cb2">Using it for commit signing</a></li>
+<li><a href="#orga88977a">Why one key for both</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org51ec0c5" class="outline-2">
-<h2 id="org51ec0c5">The problem</h2>
-<div class="outline-text-2" id="text-org51ec0c5">
+<div id="outline-container-org9689d56" class="outline-2">
+<h2 id="org9689d56">Why bother with GPG at all</h2>
+<div class="outline-text-2" id="text-org9689d56">
 <p>
-Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
-<code>sudo</code>) still leave you wanting a real package manager for dev tooling.
-The official Homebrew installer needs admin rights: it creates
-<code>/opt/homebrew</code> (Apple Silicon) or <code>/usr/local</code> (Intel) and <code>chown~s it
-to you via ~sudo</code>. On a locked-down corporate box that fails at the very
-first step. The good news: Homebrew is just files. You can put the whole
-thing anywhere your own account can write. No admin required.
+Most people meet GPG once, to encrypt an email nobody else encrypts either,
+and never touch it again. That undersells it badly. A single GPG keypair
+backs two tools I use daily: a password manager (<code>pass</code>) and signed Git
+commits. Same key, two very different jobs: one keeps secrets, the other
+proves authorship.
 </p>
 </div>
 </div>
-<div id="outline-container-org8c250f9" class="outline-2">
-<h2 id="org8c250f9">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-org8c250f9">
-<p>
-No installer script, no root; just clone it into somewhere under your
-home directory:
-</p>
-
+<div id="outline-container-orgbb637a8" class="outline-2">
+<h2 id="orgbb637a8">Generating a key</h2>
+<div class="outline-text-2" id="text-orgbb637a8">
 <div class="org-src-container">
-<pre class="src src-bash">git clone https://github.com/Homebrew/brew ~/homebrew
+<pre class="src src-bash">gpg --full-generate-key
 </pre>
 </div>
 
 <p>
-That's the entire install. Nothing touched outside your home directory,
-nothing that needs IT approval.
+Pick RSA 4096 (or ed25519 if your tooling supports it), a reasonable
+expiry (1-2 years, renewable), and a real name + email; the email is the
+identifier <code>pass</code> and Git will both look up later.
 </p>
-</div>
-</div>
-<div id="outline-container-org6c64085" class="outline-2">
-<h2 id="org6c64085">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-org6c64085">
+
 <p>
-Homebrew ships a helper that prints the exact environment it needs;
-don't hand-roll this:
+List it:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">~/homebrew/bin/brew shellenv
-</pre>
-</div>
-
-<p>
-It sets more than just <code>PATH</code>: <code>MANPATH</code>, <code>INFOPATH</code>,
-<code>HOMEBREW_PREFIX</code>, <code>HOMEBREW_CELLAR</code>, <code>HOMEBREW_REPOSITORY</code>. Eval it in
-your shell and persist it. macOS defaults to zsh since Catalina:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">echo 'eval "$(~/homebrew/bin/brew shellenv)"' &gt;&gt; ~/.zprofile
-source ~/.zprofile
-</pre>
-</div>
-
-<p>
-Verify:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">which brew
-brew --prefix
-# /Users/you/homebrew
+<pre class="src src-bash">gpg --list-secret-keys --keyid-format long
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org23f128f" class="outline-2">
-<h2 id="org23f128f">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-org23f128f">
+<div id="outline-container-org1277ddb" class="outline-2">
+<h2 id="org1277ddb">Using it with <code>pass</code></h2>
+<div class="outline-text-2" id="text-org1277ddb">
 <p>
-Homebrew's precompiled binaries ("bottles") are built assuming the
-default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>). Install into
-<code>~/homebrew</code> instead and most formulae won't have a matching bottle:
-<code>brew</code> falls back to compiling from source. That means you actually need
-Xcode Command Line Tools:
+<a href="https://www.passwordstore.org/">pass</a> is "the standard unix password
+manager": a thin wrapper around GPG-encrypted text files, versioned with
+git. No server, no proprietary format, no vendor lock-in.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">xcode-select --install
+<pre class="src src-bash">pass init "your-email@example.com"
+pass insert homelab/gitlab-root
+pass show homelab/gitlab-root
 </pre>
 </div>
 
 <p>
-On a corporate box this may itself need admin, or may already be
-provisioned through the MDM's self-service catalog, worth checking
-before you assume the whole approach is blocked. Some IT departments
-push CLT by default precisely because so much tooling depends on it.
+Every entry is one file, encrypted to your GPG key. <code>pass show</code> decrypts
+it on the fly; nothing sits in plaintext on disk. Combine it with
+<code>pass git init</code> to sync the encrypted store across machines the same way
+you'd sync any other git repo.
 </p>
 </div>
 </div>
-<div id="outline-container-orgae6b826" class="outline-2">
-<h2 id="orgae6b826">PATH ordering: be deliberate</h2>
-<div class="outline-text-2" id="text-orgae6b826">
+<div id="outline-container-org8dc9cb2" class="outline-2">
+<h2 id="org8dc9cb2">Using it for commit signing</h2>
+<div class="outline-text-2" id="text-org8dc9cb2">
 <p>
-<code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
-shadow system ones with the same name, usually what you want for dev
-tools (newer git, newer python). Be careful if your company wraps
-anything for compliance: e.g. a corporate <code>git</code> wrapper that adds
-logging or credential injection. Check <code>which git</code> (and anything else
-you're unsure about) after adding the eval line, rather than assuming
-you're still calling the wrapped version.
+Same key, different purpose: proving that a commit actually came from you,
+not from someone who pushed under your name.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git config --global user.signingkey &lt;KEY-ID&gt;
+git config --global commit.gpgsign true
+</pre>
 </div>
-</div>
-<div id="outline-container-org5aaf63a" class="outline-2">
-<h2 id="org5aaf63a">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-org5aaf63a">
+
 <p>
-Same motivation as the GPG/pass setup: one lightweight mechanism, no
-admin rights needed, no server, no vendor tie-in, just files under your
-own home directory that you can tar up, move to the next machine, or
-delete without filing a ticket.
+From then on every commit gets signed automatically:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git commit -m "some change"
+git log --show-signature -1
+</pre>
+</div>
+
+<p>
+GitHub/GitLab show a "Verified" badge once your public key is uploaded to
+the platform (Settings → GPG Keys). Export it with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">gpg --armor --export &lt;KEY-ID&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga88977a" class="outline-2">
+<h2 id="orga88977a">Why one key for both</h2>
+<div class="outline-text-2" id="text-orga88977a">
+<p>
+It's not strictly necessary: you could keep a dedicated signing key and
+a dedicated encryption key. But for a personal setup, one identity that
+both proves "this commit is mine" and "only I can read this secret" is
+easier to reason about and easier to back up: one key, one revocation
+certificate, one thing to protect.
 </p>
 </div>
 </div>
