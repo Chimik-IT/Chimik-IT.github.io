@@ -43,13 +43,8 @@
           chimik-it--theme-script))
 
 (defconst chimik-it--favicon
-  (concat "<link rel=\"icon\" href=\"data:image/svg+xml,"
-          "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
-          "%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E"
-          "%3Ctext x='16' y='23' font-family='monospace' font-size='18' "
-          "font-weight='bold' fill='white' text-anchor='middle'%3EC%3C/text%3E"
-          "%3C/svg%3E\"/>")
-  "Inline SVG Favicon, kein externer Request nötig.")
+  "<link rel=\"icon\" type=\"image/png\" href=\"static/favicon.png\"/>"
+  "Favicon: Zuschnitt aus dem GitHub-Avatar, static/favicon.png.")
 
 (defconst chimik-it--theme-early-script
   (concat "<script>(function(){"

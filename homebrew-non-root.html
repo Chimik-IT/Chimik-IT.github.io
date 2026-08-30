@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 16:14 -->
+<!-- 2026-08-30 So. 16:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Homebrew without admin: getting the PATH right</title>
@@ -193,7 +193,7 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='18' font-weight='bold' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -205,18 +205,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org696232f">The problem</a></li>
-<li><a href="#org7398423">Installing into your own prefix</a></li>
-<li><a href="#orgdf8eda6">Wiring up the environment</a></li>
-<li><a href="#org55dfe0a">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#org1dd1a94">PATH ordering: be deliberate</a></li>
-<li><a href="#org506aac2">Why this is worth doing</a></li>
+<li><a href="#org3176f85">The problem</a></li>
+<li><a href="#orga319794">Installing into your own prefix</a></li>
+<li><a href="#orgf317285">Wiring up the environment</a></li>
+<li><a href="#orgb438792">The catch: you lose most prebuilt bottles</a></li>
+<li><a href="#org3f5e52d">PATH ordering: be deliberate</a></li>
+<li><a href="#org380f6b9">Why this is worth doing</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org696232f" class="outline-2">
-<h2 id="org696232f">The problem</h2>
-<div class="outline-text-2" id="text-org696232f">
+<div id="outline-container-org3176f85" class="outline-2">
+<h2 id="org3176f85">The problem</h2>
+<div class="outline-text-2" id="text-org3176f85">
 <p>
 Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
 <code>sudo</code>) still leave you wanting a real package manager for dev tooling.
@@ -228,9 +228,9 @@ thing anywhere your own account can write. No admin required.
 </p>
 </div>
 </div>
-<div id="outline-container-org7398423" class="outline-2">
-<h2 id="org7398423">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-org7398423">
+<div id="outline-container-orga319794" class="outline-2">
+<h2 id="orga319794">Installing into your own prefix</h2>
+<div class="outline-text-2" id="text-orga319794">
 <p>
 No installer script, no root; just clone it into somewhere under your
 home directory:
@@ -247,9 +247,9 @@ nothing that needs IT approval.
 </p>
 </div>
 </div>
-<div id="outline-container-orgdf8eda6" class="outline-2">
-<h2 id="orgdf8eda6">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-orgdf8eda6">
+<div id="outline-container-orgf317285" class="outline-2">
+<h2 id="orgf317285">Wiring up the environment</h2>
+<div class="outline-text-2" id="text-orgf317285">
 <p>
 Homebrew ships a helper that prints the exact environment it needs;
 don't hand-roll this:
@@ -284,9 +284,9 @@ brew --prefix
 </div>
 </div>
 </div>
-<div id="outline-container-org55dfe0a" class="outline-2">
-<h2 id="org55dfe0a">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-org55dfe0a">
+<div id="outline-container-orgb438792" class="outline-2">
+<h2 id="orgb438792">The catch: you lose most prebuilt bottles</h2>
+<div class="outline-text-2" id="text-orgb438792">
 <p>
 Homebrew's precompiled binaries ("bottles") are built assuming the
 default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>). Install into
@@ -308,9 +308,9 @@ push CLT by default precisely because so much tooling depends on it.
 </p>
 </div>
 </div>
-<div id="outline-container-org1dd1a94" class="outline-2">
-<h2 id="org1dd1a94">PATH ordering: be deliberate</h2>
-<div class="outline-text-2" id="text-org1dd1a94">
+<div id="outline-container-org3f5e52d" class="outline-2">
+<h2 id="org3f5e52d">PATH ordering: be deliberate</h2>
+<div class="outline-text-2" id="text-org3f5e52d">
 <p>
 <code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
 shadow system ones with the same name, usually what you want for dev
@@ -322,9 +322,9 @@ you're still calling the wrapped version.
 </p>
 </div>
 </div>
-<div id="outline-container-org506aac2" class="outline-2">
-<h2 id="org506aac2">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-org506aac2">
+<div id="outline-container-org380f6b9" class="outline-2">
+<h2 id="org380f6b9">Why this is worth doing</h2>
+<div class="outline-text-2" id="text-org380f6b9">
 <p>
 Same motivation as the GPG/pass setup: one lightweight mechanism, no
 admin rights needed, no server, no vendor tie-in, just files under your
