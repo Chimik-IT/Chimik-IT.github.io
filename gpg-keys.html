@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 15:40 -->
+<!-- 2026-08-30 So. 15:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>What a GPG key is actually good for</title>
-<meta name="author" content="Tobias Speer" />
+<meta name="author" content="Tobias Yang" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -205,17 +205,17 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org457849e">Why bother with GPG at all</a></li>
-<li><a href="#orgb3746ff">Generating a key</a></li>
-<li><a href="#org04416ad">Using it with <code>pass</code></a></li>
-<li><a href="#orgcee529f">Using it for commit signing</a></li>
-<li><a href="#org8807ed3">Why one key for both</a></li>
+<li><a href="#orge0a7746">Why bother with GPG at all</a></li>
+<li><a href="#org0758578">Generating a key</a></li>
+<li><a href="#orge27a97d">Using it with <code>pass</code></a></li>
+<li><a href="#orgef90edf">Using it for commit signing</a></li>
+<li><a href="#orgc8f143a">Why one key for both</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org457849e" class="outline-2">
-<h2 id="org457849e">Why bother with GPG at all</h2>
-<div class="outline-text-2" id="text-org457849e">
+<div id="outline-container-orge0a7746" class="outline-2">
+<h2 id="orge0a7746">Why bother with GPG at all</h2>
+<div class="outline-text-2" id="text-orge0a7746">
 <p>
 Most people meet GPG once, to encrypt an email nobody else encrypts either,
 and never touch it again. That undersells it badly. A single GPG keypair
@@ -225,9 +225,9 @@ proves authorship.
 </p>
 </div>
 </div>
-<div id="outline-container-orgb3746ff" class="outline-2">
-<h2 id="orgb3746ff">Generating a key</h2>
-<div class="outline-text-2" id="text-orgb3746ff">
+<div id="outline-container-org0758578" class="outline-2">
+<h2 id="org0758578">Generating a key</h2>
+<div class="outline-text-2" id="text-org0758578">
 <div class="org-src-container">
 <pre class="src src-bash">gpg --full-generate-key
 </pre>
@@ -249,9 +249,9 @@ List it:
 </div>
 </div>
 </div>
-<div id="outline-container-org04416ad" class="outline-2">
-<h2 id="org04416ad">Using it with <code>pass</code></h2>
-<div class="outline-text-2" id="text-org04416ad">
+<div id="outline-container-orge27a97d" class="outline-2">
+<h2 id="orge27a97d">Using it with <code>pass</code></h2>
+<div class="outline-text-2" id="text-orge27a97d">
 <p>
 <a href="https://www.passwordstore.org/">pass</a> is "the standard unix password
 manager" — a thin wrapper around GPG-encrypted text files, versioned with
@@ -273,9 +273,9 @@ you'd sync any other git repo.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcee529f" class="outline-2">
-<h2 id="orgcee529f">Using it for commit signing</h2>
-<div class="outline-text-2" id="text-orgcee529f">
+<div id="outline-container-orgef90edf" class="outline-2">
+<h2 id="orgef90edf">Using it for commit signing</h2>
+<div class="outline-text-2" id="text-orgef90edf">
 <p>
 Same key, different purpose: proving that a commit actually came from you,
 not from someone who pushed under your name.
@@ -308,9 +308,9 @@ the platform (Settings → GPG Keys). Export it with:
 </div>
 </div>
 </div>
-<div id="outline-container-org8807ed3" class="outline-2">
-<h2 id="org8807ed3">Why one key for both</h2>
-<div class="outline-text-2" id="text-org8807ed3">
+<div id="outline-container-orgc8f143a" class="outline-2">
+<h2 id="orgc8f143a">Why one key for both</h2>
+<div class="outline-text-2" id="text-orgc8f143a">
 <p>
 It's not strictly necessary — you could keep a dedicated signing key and
 a dedicated encryption key. But for a personal setup, one identity that
@@ -322,7 +322,7 @@ certificate, one thing to protect.
 </div>
 </div>
 <div id="postamble" class="status">
-<p>Tobias Speer — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p>
+<p>Tobias Yang — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p>
 </div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 #+TITLE: What a GPG key is actually good for
-#+AUTHOR: Tobias Speer
+#+AUTHOR: Tobias Yang
 #+DATE: 2026-08-30
 
 * Why bother with GPG at all

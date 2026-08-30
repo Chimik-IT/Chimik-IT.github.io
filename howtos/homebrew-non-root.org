@@ -1,5 +1,5 @@
 #+TITLE: Homebrew without admin — and getting the PATH right
-#+AUTHOR: Tobias Speer
+#+AUTHOR: Tobias Yang
 #+DATE: 2026-08-31
 
 * The problem

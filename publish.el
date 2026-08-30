@@ -21,7 +21,7 @@
 
 (defun chimik-it--postamble (_plist)
   "Footer auf jeder Seite."
-  "<p>Tobias Speer — <a href=\"https://github.com/Chimik-IT\">github.com/Chimik-IT</a></p>")
+  "<p>Tobias Yang — <a href=\"https://github.com/Chimik-IT\">github.com/Chimik-IT</a></p>")
 
 (setq org-publish-project-alist
       `(("chimik-it-howtos"
