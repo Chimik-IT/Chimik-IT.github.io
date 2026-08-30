@@ -1,0 +1,16 @@
+#+TITLE: About
+#+AUTHOR: Tobias Speer
+
+15 years running Linux in production. Since 2022 also building with it —
+RAG pipelines, LLM integration, AI tooling. Bridging Ops reliability and
+AI capability: platform infrastructure (RHEL, Ansible, containers) on one
+side, RAG systems and LLM-based tooling in Python on the other.
+
+Full implementation: [[https://github.com/youngtree1/RAG-for-LLM4Tumor][RAG-for-LLM4Tumor]] — complete code and architecture
+for a RAG pipeline used in soft tissue sarcoma diagnostics. Repo is owned
+by the research team (youngtree1); I wrote the entire codebase. Published
+in /Oncology Research and Treatment/ (Feb 2025).
+
+Common Lisper by conviction.
+
+More on [[https://github.com/Chimik-IT][GitHub]].
