@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 16:09 -->
+<!-- 2026-08-30 So. 16:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Homebrew without admin — and getting the PATH right</title>
+<title>Homebrew without admin: getting the PATH right</title>
 <meta name="author" content="Tobias Yang" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
@@ -200,39 +200,39 @@
 <nav class="howto-nav"><a href="index.html" class="logo">C</a><a href="index.html">Home</a> · <a href="about.html">About</a> · <a href="https://github.com/Chimik-IT">GitHub</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
-<h1 class="title">Homebrew without admin — and getting the PATH right</h1>
+<h1 class="title">Homebrew without admin: getting the PATH right</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org97c1b05">The problem</a></li>
-<li><a href="#org715382b">Installing into your own prefix</a></li>
-<li><a href="#org40e8e12">Wiring up the environment</a></li>
-<li><a href="#org5114d10">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#org7a0bb60">PATH ordering — be deliberate</a></li>
-<li><a href="#org6ade23b">Why this is worth doing</a></li>
+<li><a href="#org91fe121">The problem</a></li>
+<li><a href="#orgc7325e4">Installing into your own prefix</a></li>
+<li><a href="#orgb5b4b13">Wiring up the environment</a></li>
+<li><a href="#org476f0ae">The catch: you lose most prebuilt bottles</a></li>
+<li><a href="#org8b2e0d1">PATH ordering: be deliberate</a></li>
+<li><a href="#orga0c4c6e">Why this is worth doing</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org97c1b05" class="outline-2">
-<h2 id="org97c1b05">The problem</h2>
-<div class="outline-text-2" id="text-org97c1b05">
+<div id="outline-container-org91fe121" class="outline-2">
+<h2 id="org91fe121">The problem</h2>
+<div class="outline-text-2" id="text-org91fe121">
 <p>
-Corporate-managed MacBooks — MDM-enrolled, no local admin, IT owns
-<code>sudo</code> — still leave you wanting a real package manager for dev tooling.
+Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
+<code>sudo</code>) still leave you wanting a real package manager for dev tooling.
 The official Homebrew installer needs admin rights: it creates
 <code>/opt/homebrew</code> (Apple Silicon) or <code>/usr/local</code> (Intel) and <code>chown~s it
 to you via ~sudo</code>. On a locked-down corporate box that fails at the very
 first step. The good news: Homebrew is just files. You can put the whole
-thing anywhere your own account can write — no admin required.
+thing anywhere your own account can write. No admin required.
 </p>
 </div>
 </div>
-<div id="outline-container-org715382b" class="outline-2">
-<h2 id="org715382b">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-org715382b">
+<div id="outline-container-orgc7325e4" class="outline-2">
+<h2 id="orgc7325e4">Installing into your own prefix</h2>
+<div class="outline-text-2" id="text-orgc7325e4">
 <p>
-No installer script, no root — just clone it into somewhere under your
+No installer script, no root; just clone it into somewhere under your
 home directory:
 </p>
 
@@ -247,11 +247,11 @@ nothing that needs IT approval.
 </p>
 </div>
 </div>
-<div id="outline-container-org40e8e12" class="outline-2">
-<h2 id="org40e8e12">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-org40e8e12">
+<div id="outline-container-orgb5b4b13" class="outline-2">
+<h2 id="orgb5b4b13">Wiring up the environment</h2>
+<div class="outline-text-2" id="text-orgb5b4b13">
 <p>
-Homebrew ships a helper that prints the exact environment it needs —
+Homebrew ships a helper that prints the exact environment it needs;
 don't hand-roll this:
 </p>
 
@@ -263,7 +263,7 @@ don't hand-roll this:
 <p>
 It sets more than just <code>PATH</code>: <code>MANPATH</code>, <code>INFOPATH</code>,
 <code>HOMEBREW_PREFIX</code>, <code>HOMEBREW_CELLAR</code>, <code>HOMEBREW_REPOSITORY</code>. Eval it in
-your shell and persist it — macOS defaults to zsh since Catalina:
+your shell and persist it. macOS defaults to zsh since Catalina:
 </p>
 
 <div class="org-src-container">
@@ -284,13 +284,13 @@ brew --prefix
 </div>
 </div>
 </div>
-<div id="outline-container-org5114d10" class="outline-2">
-<h2 id="org5114d10">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-org5114d10">
+<div id="outline-container-org476f0ae" class="outline-2">
+<h2 id="org476f0ae">The catch: you lose most prebuilt bottles</h2>
+<div class="outline-text-2" id="text-org476f0ae">
 <p>
 Homebrew's precompiled binaries ("bottles") are built assuming the
 default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>). Install into
-<code>~/homebrew</code> instead and most formulae won't have a matching bottle —
+<code>~/homebrew</code> instead and most formulae won't have a matching bottle:
 <code>brew</code> falls back to compiling from source. That means you actually need
 Xcode Command Line Tools:
 </p>
@@ -302,32 +302,32 @@ Xcode Command Line Tools:
 
 <p>
 On a corporate box this may itself need admin, or may already be
-provisioned through the MDM's self-service catalog — worth checking
+provisioned through the MDM's self-service catalog, worth checking
 before you assume the whole approach is blocked. Some IT departments
 push CLT by default precisely because so much tooling depends on it.
 </p>
 </div>
 </div>
-<div id="outline-container-org7a0bb60" class="outline-2">
-<h2 id="org7a0bb60">PATH ordering — be deliberate</h2>
-<div class="outline-text-2" id="text-org7a0bb60">
+<div id="outline-container-org8b2e0d1" class="outline-2">
+<h2 id="org8b2e0d1">PATH ordering: be deliberate</h2>
+<div class="outline-text-2" id="text-org8b2e0d1">
 <p>
 <code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
-shadow system ones with the same name — usually what you want for dev
+shadow system ones with the same name, usually what you want for dev
 tools (newer git, newer python). Be careful if your company wraps
-anything for compliance — e.g. a corporate <code>git</code> wrapper that adds
+anything for compliance: e.g. a corporate <code>git</code> wrapper that adds
 logging or credential injection. Check <code>which git</code> (and anything else
 you're unsure about) after adding the eval line, rather than assuming
 you're still calling the wrapped version.
 </p>
 </div>
 </div>
-<div id="outline-container-org6ade23b" class="outline-2">
-<h2 id="org6ade23b">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-org6ade23b">
+<div id="outline-container-orga0c4c6e" class="outline-2">
+<h2 id="orga0c4c6e">Why this is worth doing</h2>
+<div class="outline-text-2" id="text-orga0c4c6e">
 <p>
 Same motivation as the GPG/pass setup: one lightweight mechanism, no
-admin rights needed, no server, no vendor tie-in — just files under your
+admin rights needed, no server, no vendor tie-in, just files under your
 own home directory that you can tar up, move to the next machine, or
 delete without filing a ticket.
 </p>
@@ -335,7 +335,7 @@ delete without filing a ticket.
 </div>
 </div>
 <div id="postamble" class="status">
-<p>Tobias Yang (楊濤比) — <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p><script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;function apply(t){document.documentElement.setAttribute('data-theme',t);}b.addEventListener('click',function(){var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var now=document.documentElement.getAttribute('data-theme')||sys;var next=now==='dark'?'light':'dark';apply(next);localStorage.setItem('theme',next);});})();</script>
+<p>Tobias Yang (楊濤比) · <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p><script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;function apply(t){document.documentElement.setAttribute('data-theme',t);}b.addEventListener('click',function(){var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var now=document.documentElement.getAttribute('data-theme')||sys;var next=now==='dark'?'light':'dark';apply(next);localStorage.setItem('theme',next);});})();</script>
 </div>
 </body>
 </html>

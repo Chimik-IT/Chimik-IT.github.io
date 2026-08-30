@@ -40,7 +40,7 @@
 
 (defun chimik-it--postamble (_plist)
   "Footer auf jeder Seite."
-  (concat "<p>Tobias Yang (楊濤比) — <a href=\"https://github.com/Chimik-IT\">github.com/Chimik-IT</a></p>"
+  (concat "<p>Tobias Yang (楊濤比) · <a href=\"https://github.com/Chimik-IT\">github.com/Chimik-IT</a></p>"
           chimik-it--theme-script))
 
 (defconst chimik-it--favicon
@@ -76,7 +76,7 @@
 (defun chimik-it--sitemap-entry (entry style project)
   "Sitemap-Eintrag mit Datum (aus #+DATE:) vorangestellt."
   (if (not (string= "." entry))
-      (format "%s — [[file:%s][%s]]"
+      (format "%s · [[file:%s][%s]]"
               (chimik-it--org-date-keyword
                (expand-file-name entry (org-publish-property :base-directory project)))
               entry

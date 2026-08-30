@@ -1,20 +1,20 @@
-#+TITLE: Homebrew without admin — and getting the PATH right
+#+TITLE: Homebrew without admin: getting the PATH right
 #+AUTHOR: Tobias Yang
 #+DATE: 2026-08-31
 
 * The problem
 
-Corporate-managed MacBooks — MDM-enrolled, no local admin, IT owns
-=sudo= — still leave you wanting a real package manager for dev tooling.
+Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
+=sudo=) still leave you wanting a real package manager for dev tooling.
 The official Homebrew installer needs admin rights: it creates
 =/opt/homebrew= (Apple Silicon) or =/usr/local= (Intel) and ~chown~s it
 to you via ~sudo~. On a locked-down corporate box that fails at the very
 first step. The good news: Homebrew is just files. You can put the whole
-thing anywhere your own account can write — no admin required.
+thing anywhere your own account can write. No admin required.
 
 * Installing into your own prefix
 
-No installer script, no root — just clone it into somewhere under your
+No installer script, no root; just clone it into somewhere under your
 home directory:
 
 #+BEGIN_SRC bash
@@ -26,7 +26,7 @@ nothing that needs IT approval.
 
 * Wiring up the environment
 
-Homebrew ships a helper that prints the exact environment it needs —
+Homebrew ships a helper that prints the exact environment it needs;
 don't hand-roll this:
 
 #+BEGIN_SRC bash
@@ -35,7 +35,7 @@ don't hand-roll this:
 
 It sets more than just =PATH=: =MANPATH=, =INFOPATH=,
 =HOMEBREW_PREFIX=, =HOMEBREW_CELLAR=, =HOMEBREW_REPOSITORY=. Eval it in
-your shell and persist it — macOS defaults to zsh since Catalina:
+your shell and persist it. macOS defaults to zsh since Catalina:
 
 #+BEGIN_SRC bash
 echo 'eval "$(~/homebrew/bin/brew shellenv)"' >> ~/.zprofile
@@ -54,7 +54,7 @@ brew --prefix
 
 Homebrew's precompiled binaries ("bottles") are built assuming the
 default prefix (=/opt/homebrew= or =/usr/local=). Install into
-=~/homebrew= instead and most formulae won't have a matching bottle —
+=~/homebrew= instead and most formulae won't have a matching bottle:
 =brew= falls back to compiling from source. That means you actually need
 Xcode Command Line Tools:
 
@@ -63,16 +63,16 @@ xcode-select --install
 #+END_SRC
 
 On a corporate box this may itself need admin, or may already be
-provisioned through the MDM's self-service catalog — worth checking
+provisioned through the MDM's self-service catalog, worth checking
 before you assume the whole approach is blocked. Some IT departments
 push CLT by default precisely because so much tooling depends on it.
 
-* PATH ordering — be deliberate
+* PATH ordering: be deliberate
 
 ~brew shellenv~ prepends its prefix to =PATH=, so Homebrew binaries
-shadow system ones with the same name — usually what you want for dev
+shadow system ones with the same name, usually what you want for dev
 tools (newer git, newer python). Be careful if your company wraps
-anything for compliance — e.g. a corporate =git= wrapper that adds
+anything for compliance: e.g. a corporate =git= wrapper that adds
 logging or credential injection. Check =which git= (and anything else
 you're unsure about) after adding the eval line, rather than assuming
 you're still calling the wrapped version.
@@ -80,6 +80,6 @@ you're still calling the wrapped version.
 * Why this is worth doing
 
 Same motivation as the GPG/pass setup: one lightweight mechanism, no
-admin rights needed, no server, no vendor tie-in — just files under your
+admin rights needed, no server, no vendor tie-in, just files under your
 own home directory that you can tar up, move to the next machine, or
 delete without filing a ticket.
