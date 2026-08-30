@@ -19,7 +19,6 @@
   "Navigation oben auf jeder Seite."
   (concat "<nav class=\"howto-nav\">"
           "<a href=\"index.html\" class=\"logo\">C</a>"
-          "<a href=\"index.html\">Home</a> · "
           "<a href=\"about.html\">About</a> · "
           "<a href=\"https://github.com/Chimik-IT\">GitHub</a>"
           "<button id=\"theme-toggle\" aria-label=\"Toggle color theme\">◐</button>"
