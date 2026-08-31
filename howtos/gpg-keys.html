@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-31 Mo. 08:57 -->
+<!-- 2026-08-31 Mo. 08:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>What a GPG key is actually good for</title>
@@ -205,18 +205,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgab7faa6">Why bother with GPG at all</a></li>
-<li><a href="#org2da4242">Generating a key</a></li>
-<li><a href="#orgb43b955">Using it with <code>pass</code></a></li>
-<li><a href="#org22c3c25">Using it for commit signing</a></li>
-<li><a href="#org38e32a7">Why one key for both</a></li>
-<li><a href="#org593c066">Sources</a></li>
+<li><a href="#org8e2d2e8">Why bother with GPG at all</a></li>
+<li><a href="#org2733e0d">Generating a key</a></li>
+<li><a href="#org48a6c70">Using it with <code>pass</code></a></li>
+<li><a href="#org5dd12d2">Using it for commit signing</a></li>
+<li><a href="#orge738983">Why one key for both</a></li>
+<li><a href="#orgc03cd25">Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgab7faa6" class="outline-2">
-<h2 id="orgab7faa6">Why bother with GPG at all</h2>
-<div class="outline-text-2" id="text-orgab7faa6">
+<div id="outline-container-org8e2d2e8" class="outline-2">
+<h2 id="org8e2d2e8">Why bother with GPG at all</h2>
+<div class="outline-text-2" id="text-org8e2d2e8">
 <p>
 Most people meet GPG once, to encrypt an email nobody else encrypts either,
 and never touch it again. That undersells it badly. A single GPG keypair
@@ -226,9 +226,9 @@ proves authorship.
 </p>
 </div>
 </div>
-<div id="outline-container-org2da4242" class="outline-2">
-<h2 id="org2da4242">Generating a key</h2>
-<div class="outline-text-2" id="text-org2da4242">
+<div id="outline-container-org2733e0d" class="outline-2">
+<h2 id="org2733e0d">Generating a key</h2>
+<div class="outline-text-2" id="text-org2733e0d">
 <div class="org-src-container">
 <pre class="src src-bash">gpg --full-generate-key
 </pre>
@@ -253,9 +253,9 @@ List it:
 </div>
 </div>
 </div>
-<div id="outline-container-orgb43b955" class="outline-2">
-<h2 id="orgb43b955">Using it with <code>pass</code></h2>
-<div class="outline-text-2" id="text-orgb43b955">
+<div id="outline-container-org48a6c70" class="outline-2">
+<h2 id="org48a6c70">Using it with <code>pass</code></h2>
+<div class="outline-text-2" id="text-org48a6c70">
 <p>
 <a href="https://www.passwordstore.org/">pass</a> is "the standard unix password
 manager": a thin wrapper around GPG-encrypted text files, versioned with
@@ -277,9 +277,9 @@ you'd sync any other git repo.
 </p>
 </div>
 </div>
-<div id="outline-container-org22c3c25" class="outline-2">
-<h2 id="org22c3c25">Using it for commit signing</h2>
-<div class="outline-text-2" id="text-org22c3c25">
+<div id="outline-container-org5dd12d2" class="outline-2">
+<h2 id="org5dd12d2">Using it for commit signing</h2>
+<div class="outline-text-2" id="text-org5dd12d2">
 <p>
 Same key, different purpose: proving that a commit actually came from you,
 not from someone who pushed under your name.
@@ -311,6 +311,10 @@ git log --show-signature -1
 GitHub/GitLab show a "Verified" badge once your public key is uploaded to
 the platform (Settings → GPG Keys) and matches the signature
 (<a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification">GitHub docs: about commit signature verification</a>).
+GitLab is stricter about one detail: the email in your GPG key has to
+match a <b>verified</b> email on your GitLab account, or the commit shows up
+signed but not verified
+(<a href="https://docs.gitlab.com/user/project/repository/signed_commits/gpg/">GitLab docs: signed commits with GPG</a>).
 Export it with:
 </p>
 
@@ -320,9 +324,9 @@ Export it with:
 </div>
 </div>
 </div>
-<div id="outline-container-org38e32a7" class="outline-2">
-<h2 id="org38e32a7">Why one key for both</h2>
-<div class="outline-text-2" id="text-org38e32a7">
+<div id="outline-container-orge738983" class="outline-2">
+<h2 id="orge738983">Why one key for both</h2>
+<div class="outline-text-2" id="text-orge738983">
 <p>
 It's not strictly necessary: you could keep a dedicated signing key and
 a dedicated encryption key. But for a personal setup, one identity that
@@ -332,14 +336,15 @@ certificate, one thing to protect.
 </p>
 </div>
 </div>
-<div id="outline-container-org593c066" class="outline-2">
-<h2 id="org593c066">Sources</h2>
-<div class="outline-text-2" id="text-org593c066">
+<div id="outline-container-orgc03cd25" class="outline-2">
+<h2 id="orgc03cd25">Sources</h2>
+<div class="outline-text-2" id="text-orgc03cd25">
 <ul class="org-ul">
 <li><a href="https://www.gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html">GnuPG manual: OpenPGP Key Management</a>, key generation options and expiry</li>
 <li><a href="https://www.passwordstore.org/">passwordstore.org</a>, what <code>pass</code> is and how the encrypted store works</li>
 <li><a href="https://git-scm.com/docs/git-config">git-config documentation</a>, <code>user.signingKey</code> and <code>commit.gpgSign</code></li>
 <li><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification">GitHub docs: about commit signature verification</a>, the "Verified" badge</li>
+<li><a href="https://docs.gitlab.com/user/project/repository/signed_commits/gpg/">GitLab docs: signed commits with GPG</a>, the email-matching requirement</li>
 </ul>
 </div>
 </div>

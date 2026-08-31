@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-31 Mo. 08:57 -->
+<!-- 2026-08-31 Mo. 08:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Homebrew without admin: getting the PATH right</title>
@@ -205,19 +205,19 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd861a10">The problem</a></li>
-<li><a href="#orge3fce5b">Installing into your own prefix</a></li>
-<li><a href="#orgaa6f9be">Wiring up the environment</a></li>
-<li><a href="#org533c0c3">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#org3fe0f2a">PATH ordering: be deliberate</a></li>
-<li><a href="#org3b3a1b5">Why this is worth doing</a></li>
-<li><a href="#orgf44bfad">Sources</a></li>
+<li><a href="#org81ea2f5">The problem</a></li>
+<li><a href="#orgf25a54d">Installing into your own prefix</a></li>
+<li><a href="#orgb6ca15e">Wiring up the environment</a></li>
+<li><a href="#orgf1744a7">The catch: you lose most prebuilt bottles</a></li>
+<li><a href="#org7945e1b">PATH ordering: be deliberate</a></li>
+<li><a href="#org15042a9">Why this is worth doing</a></li>
+<li><a href="#orgf71e234">Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd861a10" class="outline-2">
-<h2 id="orgd861a10">The problem</h2>
-<div class="outline-text-2" id="text-orgd861a10">
+<div id="outline-container-org81ea2f5" class="outline-2">
+<h2 id="org81ea2f5">The problem</h2>
+<div class="outline-text-2" id="text-org81ea2f5">
 <p>
 Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
 <code>sudo</code>) still leave you wanting a real package manager for dev tooling.
@@ -229,9 +229,9 @@ thing anywhere your own account can write. No admin required.
 </p>
 </div>
 </div>
-<div id="outline-container-orge3fce5b" class="outline-2">
-<h2 id="orge3fce5b">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-orge3fce5b">
+<div id="outline-container-orgf25a54d" class="outline-2">
+<h2 id="orgf25a54d">Installing into your own prefix</h2>
+<div class="outline-text-2" id="text-orgf25a54d">
 <p>
 No installer script, no root; just clone it into somewhere under your
 home directory:
@@ -252,9 +252,9 @@ own docs only describe installing to the default prefix
 </p>
 </div>
 </div>
-<div id="outline-container-orgaa6f9be" class="outline-2">
-<h2 id="orgaa6f9be">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-orgaa6f9be">
+<div id="outline-container-orgb6ca15e" class="outline-2">
+<h2 id="orgb6ca15e">Wiring up the environment</h2>
+<div class="outline-text-2" id="text-orgb6ca15e">
 <p>
 Homebrew ships a helper that prints the exact environment it needs;
 don't hand-roll this:
@@ -290,9 +290,9 @@ brew --prefix
 </div>
 </div>
 </div>
-<div id="outline-container-org533c0c3" class="outline-2">
-<h2 id="org533c0c3">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-org533c0c3">
+<div id="outline-container-orgf1744a7" class="outline-2">
+<h2 id="orgf1744a7">The catch: you lose most prebuilt bottles</h2>
+<div class="outline-text-2" id="text-orgf1744a7">
 <p>
 Homebrew's precompiled binaries ("bottles") are built assuming the
 default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>); install into
@@ -317,9 +317,9 @@ push CLT by default precisely because so much tooling depends on it.
 </p>
 </div>
 </div>
-<div id="outline-container-org3fe0f2a" class="outline-2">
-<h2 id="org3fe0f2a">PATH ordering: be deliberate</h2>
-<div class="outline-text-2" id="text-org3fe0f2a">
+<div id="outline-container-org7945e1b" class="outline-2">
+<h2 id="org7945e1b">PATH ordering: be deliberate</h2>
+<div class="outline-text-2" id="text-org7945e1b">
 <p>
 <code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
 shadow system ones with the same name, usually what you want for dev
@@ -331,9 +331,9 @@ you're still calling the wrapped version.
 </p>
 </div>
 </div>
-<div id="outline-container-org3b3a1b5" class="outline-2">
-<h2 id="org3b3a1b5">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-org3b3a1b5">
+<div id="outline-container-org15042a9" class="outline-2">
+<h2 id="org15042a9">Why this is worth doing</h2>
+<div class="outline-text-2" id="text-org15042a9">
 <p>
 Same motivation as the GPG/pass setup: one lightweight mechanism, no
 admin rights needed, no server, no vendor tie-in, just files under your
@@ -342,9 +342,9 @@ delete without filing a ticket.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf44bfad" class="outline-2">
-<h2 id="orgf44bfad">Sources</h2>
-<div class="outline-text-2" id="text-orgf44bfad">
+<div id="outline-container-orgf71e234" class="outline-2">
+<h2 id="orgf71e234">Sources</h2>
+<div class="outline-text-2" id="text-orgf71e234">
 <ul class="org-ul">
 <li><a href="https://docs.brew.sh/Installation">Homebrew: Installation</a>, official docs, default-prefix requirement and Xcode CLT</li>
 <li><a href="https://docs.brew.sh/FAQ">Homebrew: FAQ</a>, on bottles requiring the default prefix</li>
