@@ -92,6 +92,7 @@
       (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:title\" content=\"Chimik-IT\"/>\n")
       (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:description\" content=\"How-tos on infrastructure and tooling by Tobias Yang.\"/>\n")
       (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:url\" content=\"https://chimik-it.github.io/\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Person\",\"name\":\"Tobias Yang\",\"alternateName\":[\"楊濤比\",\"Tobias Speer\"],\"url\":\"https://chimik-it.github.io/\",\"sameAs\":[\"https://github.com/Chimik-IT\"],\"description\":\"Platform infrastructure and RAG/LLM tooling.\"}</script>\n")
       (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:image\" content=\"https://chimik-it.github.io/static/favicon.png\"/>\n")
       (insert "#+HTML_HEAD_EXTRA: <meta name=\"twitter:card\" content=\"summary\"/>\n")
       (insert "\n")

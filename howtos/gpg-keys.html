@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-31 Mo. 09:03 -->
+<!-- 2026-08-31 Mo. 09:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>What a GPG key is actually good for</title>
@@ -213,18 +213,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgab22f3d">Why bother with GPG at all</a></li>
-<li><a href="#orga1723b7">Generating a key</a></li>
-<li><a href="#org516d9ab">Using it with <code>pass</code></a></li>
-<li><a href="#org814158a">Using it for commit signing</a></li>
-<li><a href="#org6fa6ec3">Why one key for both</a></li>
-<li><a href="#org7c91af9">Sources</a></li>
+<li><a href="#orgf7dc86f">Why bother with GPG at all</a></li>
+<li><a href="#org7154517">Generating a key</a></li>
+<li><a href="#orga65f552">Using it with <code>pass</code></a></li>
+<li><a href="#org7d85091">Using it for commit signing</a></li>
+<li><a href="#org3731733">Why one key for both</a></li>
+<li><a href="#orgc7beeff">Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgab22f3d" class="outline-2">
-<h2 id="orgab22f3d">Why bother with GPG at all</h2>
-<div class="outline-text-2" id="text-orgab22f3d">
+<div id="outline-container-orgf7dc86f" class="outline-2">
+<h2 id="orgf7dc86f">Why bother with GPG at all</h2>
+<div class="outline-text-2" id="text-orgf7dc86f">
 <p>
 Most people meet GPG once, to encrypt an email nobody else encrypts either,
 and never touch it again. That undersells it badly. A single GPG keypair
@@ -234,9 +234,9 @@ proves authorship.
 </p>
 </div>
 </div>
-<div id="outline-container-orga1723b7" class="outline-2">
-<h2 id="orga1723b7">Generating a key</h2>
-<div class="outline-text-2" id="text-orga1723b7">
+<div id="outline-container-org7154517" class="outline-2">
+<h2 id="org7154517">Generating a key</h2>
+<div class="outline-text-2" id="text-org7154517">
 <div class="org-src-container">
 <pre class="src src-bash">gpg --full-generate-key
 </pre>
@@ -261,9 +261,9 @@ List it:
 </div>
 </div>
 </div>
-<div id="outline-container-org516d9ab" class="outline-2">
-<h2 id="org516d9ab">Using it with <code>pass</code></h2>
-<div class="outline-text-2" id="text-org516d9ab">
+<div id="outline-container-orga65f552" class="outline-2">
+<h2 id="orga65f552">Using it with <code>pass</code></h2>
+<div class="outline-text-2" id="text-orga65f552">
 <p>
 <a href="https://www.passwordstore.org/">pass</a> is "the standard unix password
 manager": a thin wrapper around GPG-encrypted text files, versioned with
@@ -285,9 +285,9 @@ you'd sync any other git repo.
 </p>
 </div>
 </div>
-<div id="outline-container-org814158a" class="outline-2">
-<h2 id="org814158a">Using it for commit signing</h2>
-<div class="outline-text-2" id="text-org814158a">
+<div id="outline-container-org7d85091" class="outline-2">
+<h2 id="org7d85091">Using it for commit signing</h2>
+<div class="outline-text-2" id="text-org7d85091">
 <p>
 Same key, different purpose: proving that a commit actually came from you,
 not from someone who pushed under your name.
@@ -332,9 +332,9 @@ Export it with:
 </div>
 </div>
 </div>
-<div id="outline-container-org6fa6ec3" class="outline-2">
-<h2 id="org6fa6ec3">Why one key for both</h2>
-<div class="outline-text-2" id="text-org6fa6ec3">
+<div id="outline-container-org3731733" class="outline-2">
+<h2 id="org3731733">Why one key for both</h2>
+<div class="outline-text-2" id="text-org3731733">
 <p>
 It's not strictly necessary: you could keep a dedicated signing key and
 a dedicated encryption key. But for a personal setup, one identity that
@@ -344,9 +344,9 @@ certificate, one thing to protect.
 </p>
 </div>
 </div>
-<div id="outline-container-org7c91af9" class="outline-2">
-<h2 id="org7c91af9">Sources</h2>
-<div class="outline-text-2" id="text-org7c91af9">
+<div id="outline-container-orgc7beeff" class="outline-2">
+<h2 id="orgc7beeff">Sources</h2>
+<div class="outline-text-2" id="text-orgc7beeff">
 <ul class="org-ul">
 <li><a href="https://www.gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html">GnuPG manual: OpenPGP Key Management</a>, key generation options and expiry</li>
 <li><a href="https://www.passwordstore.org/">passwordstore.org</a>, what <code>pass</code> is and how the encrypted store works</li>
