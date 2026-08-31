@@ -85,9 +85,32 @@
     (setq entries (sort entries (lambda (a b) (string> (nth 0 a) (nth 0 b)))))
     (unless (file-directory-p index-dir) (make-directory index-dir t))
     (with-temp-file (expand-file-name "index.org" index-dir)
-      (insert "#+TITLE: Chimik-IT\n\n")
+      (insert "#+TITLE: Chimik-IT\n")
+      (insert "#+DESCRIPTION: How-tos on infrastructure and tooling by Tobias Yang.\n")
+      (insert "#+HTML_HEAD_EXTRA: <link rel=\"canonical\" href=\"https://chimik-it.github.io/\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:type\" content=\"website\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:title\" content=\"Chimik-IT\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:description\" content=\"How-tos on infrastructure and tooling by Tobias Yang.\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:url\" content=\"https://chimik-it.github.io/\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:image\" content=\"https://chimik-it.github.io/static/favicon.png\"/>\n")
+      (insert "#+HTML_HEAD_EXTRA: <meta name=\"twitter:card\" content=\"summary\"/>\n")
+      (insert "\n")
       (dolist (e entries)
         (insert (format "- %s · [[file:howtos/%s.html][%s]]\n" (nth 0 e) (nth 2 e) (nth 1 e)))))))
+
+(defun chimik-it--write-sitemap-xml ()
+  "Baut sitemap.xml aus Root-Seite + allen Artikeln in src/howtos/."
+  (let* ((howtos-dir (expand-file-name "src/howtos" chimik-it-root))
+         (files (directory-files howtos-dir t "\\.org\\'"))
+         (base "https://chimik-it.github.io/"))
+    (with-temp-file (expand-file-name "sitemap.xml" chimik-it-root)
+      (insert "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+      (insert "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n")
+      (insert (format "  <url><loc>%s</loc></url>\n" base))
+      (dolist (f files)
+        (insert (format "  <url><loc>%showtos/%s.html</loc><lastmod>%s</lastmod></url>\n"
+                         base (file-name-base f) (chimik-it--org-keyword f "DATE"))))
+      (insert "</urlset>\n"))))
 
 (setq org-publish-project-alist
       `(("chimik-it-articles"
@@ -122,9 +145,10 @@
          :components ("chimik-it-articles" "chimik-it-index" "chimik-it-static"))))
 
 (defun chimik-it-build ()
-  "Kompletter Build: Index aus den Artikeln generieren, dann alles publizieren."
+  "Kompletter Build: Index + sitemap.xml generieren, dann alles publizieren."
   (interactive)
   (chimik-it--write-index)
+  (chimik-it--write-sitemap-xml)
   (org-publish-all t))
 
 (provide 'publish)
