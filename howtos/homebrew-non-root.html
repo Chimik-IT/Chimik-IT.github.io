@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-30 So. 19:57 -->
+<!-- 2026-08-31 Mo. 08:49 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Homebrew without admin: getting the PATH right</title>
@@ -205,18 +205,19 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd8d6961">The problem</a></li>
-<li><a href="#org34422c6">Installing into your own prefix</a></li>
-<li><a href="#org898bbc1">Wiring up the environment</a></li>
-<li><a href="#orge2f9d14">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#org1e32927">PATH ordering: be deliberate</a></li>
-<li><a href="#orgcde2711">Why this is worth doing</a></li>
+<li><a href="#org3754011">The problem</a></li>
+<li><a href="#orgec1929e">Installing into your own prefix</a></li>
+<li><a href="#org4da8ab0">Wiring up the environment</a></li>
+<li><a href="#orga1fd09e">The catch: you lose most prebuilt bottles</a></li>
+<li><a href="#org22a5996">PATH ordering: be deliberate</a></li>
+<li><a href="#org54721fd">Why this is worth doing</a></li>
+<li><a href="#orgb5021fb">Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd8d6961" class="outline-2">
-<h2 id="orgd8d6961">The problem</h2>
-<div class="outline-text-2" id="text-orgd8d6961">
+<div id="outline-container-org3754011" class="outline-2">
+<h2 id="org3754011">The problem</h2>
+<div class="outline-text-2" id="text-org3754011">
 <p>
 Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
 <code>sudo</code>) still leave you wanting a real package manager for dev tooling.
@@ -228,9 +229,9 @@ thing anywhere your own account can write. No admin required.
 </p>
 </div>
 </div>
-<div id="outline-container-org34422c6" class="outline-2">
-<h2 id="org34422c6">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-org34422c6">
+<div id="outline-container-orgec1929e" class="outline-2">
+<h2 id="orgec1929e">Installing into your own prefix</h2>
+<div class="outline-text-2" id="text-orgec1929e">
 <p>
 No installer script, no root; just clone it into somewhere under your
 home directory:
@@ -243,13 +244,17 @@ home directory:
 
 <p>
 That's the entire install. Nothing touched outside your home directory,
-nothing that needs IT approval.
+nothing that needs IT approval. Worth being upfront about: this works
+because Homebrew's installation is literally that git repository, not
+because it's a documented, officially supported install path. Homebrew's
+own docs only describe installing to the default prefix
+(<a href="https://docs.brew.sh/Installation">docs.brew.sh/Installation</a>); everything below follows from that gap.
 </p>
 </div>
 </div>
-<div id="outline-container-org898bbc1" class="outline-2">
-<h2 id="org898bbc1">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-org898bbc1">
+<div id="outline-container-org4da8ab0" class="outline-2">
+<h2 id="org4da8ab0">Wiring up the environment</h2>
+<div class="outline-text-2" id="text-org4da8ab0">
 <p>
 Homebrew ships a helper that prints the exact environment it needs;
 don't hand-roll this:
@@ -262,7 +267,8 @@ don't hand-roll this:
 
 <p>
 It sets more than just <code>PATH</code>: <code>MANPATH</code>, <code>INFOPATH</code>,
-<code>HOMEBREW_PREFIX</code>, <code>HOMEBREW_CELLAR</code>, <code>HOMEBREW_REPOSITORY</code>. Eval it in
+<code>HOMEBREW_PREFIX</code>, <code>HOMEBREW_CELLAR</code>, <code>HOMEBREW_REPOSITORY</code>
+(<a href="https://docs.brew.sh/Manpage">docs.brew.sh/Manpage</a>). Eval it in
 your shell and persist it. macOS defaults to zsh since Catalina:
 </p>
 
@@ -284,14 +290,17 @@ brew --prefix
 </div>
 </div>
 </div>
-<div id="outline-container-orge2f9d14" class="outline-2">
-<h2 id="orge2f9d14">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-orge2f9d14">
+<div id="outline-container-orga1fd09e" class="outline-2">
+<h2 id="orga1fd09e">The catch: you lose most prebuilt bottles</h2>
+<div class="outline-text-2" id="text-orga1fd09e">
 <p>
 Homebrew's precompiled binaries ("bottles") are built assuming the
-default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>). Install into
-<code>~/homebrew</code> instead and most formulae won't have a matching bottle:
-<code>brew</code> falls back to compiling from source. That means you actually need
+default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>); install into
+<code>~/homebrew</code> instead and most formulae won't have a matching bottle,
+<code>brew</code> falls back to compiling from source. Homebrew's own FAQ is blunt
+about this: building from source "is not supported"
+(<a href="https://docs.brew.sh/FAQ">docs.brew.sh/FAQ</a>). In practice it mostly
+works, but you're off the path they test. That means you actually need
 Xcode Command Line Tools:
 </p>
 
@@ -308,9 +317,9 @@ push CLT by default precisely because so much tooling depends on it.
 </p>
 </div>
 </div>
-<div id="outline-container-org1e32927" class="outline-2">
-<h2 id="org1e32927">PATH ordering: be deliberate</h2>
-<div class="outline-text-2" id="text-org1e32927">
+<div id="outline-container-org22a5996" class="outline-2">
+<h2 id="org22a5996">PATH ordering: be deliberate</h2>
+<div class="outline-text-2" id="text-org22a5996">
 <p>
 <code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
 shadow system ones with the same name, usually what you want for dev
@@ -322,14 +331,30 @@ you're still calling the wrapped version.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcde2711" class="outline-2">
-<h2 id="orgcde2711">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-orgcde2711">
+<div id="outline-container-org54721fd" class="outline-2">
+<h2 id="org54721fd">Why this is worth doing</h2>
+<div class="outline-text-2" id="text-org54721fd">
 <p>
 Same motivation as the GPG/pass setup: one lightweight mechanism, no
 admin rights needed, no server, no vendor tie-in, just files under your
 own home directory that you can tar up, move to the next machine, or
 delete without filing a ticket.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb5021fb" class="outline-2">
+<h2 id="orgb5021fb">Sources</h2>
+<div class="outline-text-2" id="text-orgb5021fb">
+<ul class="org-ul">
+<li><a href="https://docs.brew.sh/Installation">Homebrew: Installation</a>, official docs, default-prefix requirement and Xcode CLT</li>
+<li><a href="https://docs.brew.sh/FAQ">Homebrew: FAQ</a>, on bottles requiring the default prefix</li>
+<li><a href="https://docs.brew.sh/Manpage">Homebrew: Manpage</a>, <code>brew shellenv</code> behavior</li>
+</ul>
+
+<p>
+The custom-prefix git-clone approach itself isn't in any of the above;
+it's not an officially documented install path, just a consequence of
+Homebrew being a plain git repository underneath.
 </p>
 </div>
 </div>
