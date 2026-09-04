@@ -86,6 +86,7 @@
     (unless (file-directory-p index-dir) (make-directory index-dir t))
     (with-temp-file (expand-file-name "index.org" index-dir)
       (insert "#+TITLE: Chimik-IT\n")
+      (insert "#+AUTHOR: Chimik IT\n")
       (insert "#+DESCRIPTION: How-tos on infrastructure and tooling by Tobias Yang.\n")
       (insert "#+HTML_HEAD_EXTRA: <link rel=\"canonical\" href=\"https://chimik-it.github.io/\"/>\n")
       (insert "#+HTML_HEAD_EXTRA: <meta property=\"og:type\" content=\"website\"/>\n")

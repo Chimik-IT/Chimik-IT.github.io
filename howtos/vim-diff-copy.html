@@ -6,9 +6,8 @@
 <!-- 2026-09-04 Fri 22:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chimik-IT</title>
-<meta name="author" content="Chimik IT" />
-<meta name="description" content="How-tos on infrastructure and tooling by Tobias Yang." />
+<title>Copying diffs between files in vim</title>
+<meta name="author" content="Tobias Yang" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -194,27 +193,178 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" href="static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
-<link rel="canonical" href="https://chimik-it.github.io/"/>
-<meta property="og:type" content="website"/>
-<meta property="og:title" content="Chimik-IT"/>
-<meta property="og:description" content="How-tos on infrastructure and tooling by Tobias Yang."/>
-<meta property="og:url" content="https://chimik-it.github.io/"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Tobias Yang","alternateName":["楊濤比","Tobias Speer"],"url":"https://chimik-it.github.io/","sameAs":["https://github.com/Chimik-IT"],"description":"Platform infrastructure and RAG/LLM tooling."}</script>
-<meta property="og:image" content="https://chimik-it.github.io/static/favicon.png"/>
-<meta name="twitter:card" content="summary"/>
+<link rel="stylesheet" href="../static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="../static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="howto-nav"><a href="index.html" class="logo"><img src="static/favicon.png" alt="Logo"/></a><a href="https://github.com/Chimik-IT">About</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
+<nav class="howto-nav"><a href="../index.html" class="logo"><img src="../static/favicon.png" alt="Logo"/></a><a href="https://github.com/Chimik-IT">About</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
-<h1 class="title">Chimik-IT</h1>
-<ul class="org-ul">
-<li>2026-09-04 · <a href="howtos/vim-diff-copy.html">Copying diffs between files in vim</a></li>
-<li>2026-08-31 · <a href="howtos/homebrew-non-root.html">Homebrew without admin: getting the PATH right</a></li>
-<li>2026-08-30 · <a href="howtos/gpg-keys.html">What a GPG key is actually good for</a></li>
+<h1 class="title">Copying diffs between files in vim</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge6a6b76">The problem</a></li>
+<li><a href="#org8eb0015">Getting into diff mode</a></li>
+<li><a href="#org0501a55">Reading the diff</a></li>
+<li><a href="#org832cf53">Copying changes across</a></li>
+<li><a href="#org8f59c4e">Leaving diff mode</a></li>
+<li><a href="#orgf4dcd15">Why this beats copy-paste</a></li>
 </ul>
+</div>
+</div>
+<div id="outline-container-orge6a6b76" class="outline-2">
+<h2 id="orge6a6b76">The problem</h2>
+<div class="outline-text-2" id="text-orge6a6b76">
+<p>
+You've got two versions of roughly the same file — a config before and
+after a change, two branches of a document, an old script and a patched
+one — and you want to pull specific hunks from one into the other. Not
+the whole file, just the parts that differ. Copy-pasting by hand means
+hunting for the boundaries yourself. Vim's diff mode does that hunting
+for you and gives you two commands to move changes across.
+</p>
+</div>
+</div>
+<div id="outline-container-org8eb0015" class="outline-2">
+<h2 id="org8eb0015">Getting into diff mode</h2>
+<div class="outline-text-2" id="text-org8eb0015">
+<p>
+Open both files side by side, diffed, straight from the shell:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">vimdiff file1 file2
+</pre>
+</div>
+
+<p>
+or equivalently:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">vim -d file1 file2
+</pre>
+</div>
+
+<p>
+Both put the files in a vertical split with differing lines
+highlighted.
+</p>
+
+<p>
+If you already have two files open in separate windows inside a
+running vim, you don't need to restart anything. Just switch to each
+window and turn diff mode on for it:
+</p>
+
+<pre class="example" id="orgd344b47">
+:diffthis
+</pre>
+
+<p>
+Run it once per window you want included in the comparison — typically
+twice, one in each window.
+</p>
+</div>
+</div>
+<div id="outline-container-org0501a55" class="outline-2">
+<h2 id="org0501a55">Reading the diff</h2>
+<div class="outline-text-2" id="text-org0501a55">
+<p>
+Lines that differ are highlighted; within a changed line, the specific
+characters that differ get a second, stronger highlight. Blank filler
+lines appear on one side wherever the other side has extra lines, so
+the two windows stay aligned.
+</p>
+
+<p>
+Jump between changes with:
+</p>
+
+<ul class="org-ul">
+<li><code>]c</code> — next difference</li>
+<li><code>[c</code> — previous difference</li>
+</ul>
+
+<p>
+This matters more than it sounds: on a long file you don't scroll,
+you jump straight from hunk to hunk.
+</p>
+</div>
+</div>
+<div id="outline-container-org832cf53" class="outline-2">
+<h2 id="org832cf53">Copying changes across</h2>
+<div class="outline-text-2" id="text-org832cf53">
+<p>
+Two commands, easy to keep straight once you know the mnemonic:
+</p>
+
+<ul class="org-ul">
+<li><code>do</code> — <b>diff obtain</b>: pull the change from the <b>other</b> window into
+the current one</li>
+<li><code>dp</code> — <b>diff put</b>: push the change from the current window into the
+<b>other</b> one</li>
+</ul>
+
+<p>
+Put the cursor inside (or on) a highlighted hunk, then run whichever
+one you need. Vim copies exactly that hunk — not the whole file — and
+both windows immediately re-diff, so you can see right away whether
+anything is still left to reconcile.
+</p>
+
+<p>
+A typical loop looks like this:
+</p>
+
+<pre class="example" id="orgb42ddf1">
+]c      " jump to the next diff
+do      " or dp, depending on which direction you want to copy
+]c      " jump to the next one
+...
+</pre>
+</div>
+</div>
+<div id="outline-container-org8f59c4e" class="outline-2">
+<h2 id="org8f59c4e">Leaving diff mode</h2>
+<div class="outline-text-2" id="text-org8f59c4e">
+<p>
+Once you're done reconciling, turn diff mode off:
+</p>
+
+<pre class="example" id="orgdc21c9e">
+:diffoff
+</pre>
+
+<p>
+or, if you opened more than two windows and want to clear all of them
+at once:
+</p>
+
+<pre class="example" id="org0979c59">
+:diffoff!
+</pre>
+
+<p>
+Save each buffer as usual (<code>:w</code>) — diff mode doesn't change how
+writing works, it just changes how the windows are displayed and gives
+you <code>do=/=dp</code> while it's active.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf4dcd15" class="outline-2">
+<h2 id="orgf4dcd15">Why this beats copy-paste</h2>
+<div class="outline-text-2" id="text-orgf4dcd15">
+<p>
+The hunk boundaries are computed for you, both sides stay
+line-aligned as you go, and you get instant visual feedback after
+every <code>do=/=dp</code> — no separate diff tool, no switching context out of
+the editor you're already reconciling the files in.
+</p>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p>Tobias Yang (楊濤比) · <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p><script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;function apply(t){document.documentElement.setAttribute('data-theme',t);}b.addEventListener('click',function(){var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var now=document.documentElement.getAttribute('data-theme')||sys;var next=now==='dark'?'light':'dark';apply(next);localStorage.setItem('theme',next);});})();</script>
