@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-09-04 Fri 22:36 -->
+<!-- 2026-09-19 Sat 07:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Copying diffs between files in vim</title>
@@ -205,18 +205,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge6a6b76">The problem</a></li>
-<li><a href="#org8eb0015">Getting into diff mode</a></li>
-<li><a href="#org0501a55">Reading the diff</a></li>
-<li><a href="#org832cf53">Copying changes across</a></li>
-<li><a href="#org8f59c4e">Leaving diff mode</a></li>
-<li><a href="#orgf4dcd15">Why this beats copy-paste</a></li>
+<li><a href="#orgb1ee2fb">The problem</a></li>
+<li><a href="#orge74a87c">Getting into diff mode</a></li>
+<li><a href="#org15bc563">Reading the diff</a></li>
+<li><a href="#orgf90c2da">Copying changes across</a></li>
+<li><a href="#org43d47b2">Leaving diff mode</a></li>
+<li><a href="#orgb3872c4">Why this beats copy-paste</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge6a6b76" class="outline-2">
-<h2 id="orge6a6b76">The problem</h2>
-<div class="outline-text-2" id="text-orge6a6b76">
+<div id="outline-container-orgb1ee2fb" class="outline-2">
+<h2 id="orgb1ee2fb">The problem</h2>
+<div class="outline-text-2" id="text-orgb1ee2fb">
 <p>
 You've got two versions of roughly the same file — a config before and
 after a change, two branches of a document, an old script and a patched
@@ -227,9 +227,9 @@ for you and gives you two commands to move changes across.
 </p>
 </div>
 </div>
-<div id="outline-container-org8eb0015" class="outline-2">
-<h2 id="org8eb0015">Getting into diff mode</h2>
-<div class="outline-text-2" id="text-org8eb0015">
+<div id="outline-container-orge74a87c" class="outline-2">
+<h2 id="orge74a87c">Getting into diff mode</h2>
+<div class="outline-text-2" id="text-orge74a87c">
 <p>
 Open both files side by side, diffed, straight from the shell:
 </p>
@@ -259,7 +259,7 @@ running vim, you don't need to restart anything. Just switch to each
 window and turn diff mode on for it:
 </p>
 
-<pre class="example" id="orgd344b47">
+<pre class="example" id="orgcb50ab4">
 :diffthis
 </pre>
 
@@ -269,9 +269,9 @@ twice, one in each window.
 </p>
 </div>
 </div>
-<div id="outline-container-org0501a55" class="outline-2">
-<h2 id="org0501a55">Reading the diff</h2>
-<div class="outline-text-2" id="text-org0501a55">
+<div id="outline-container-org15bc563" class="outline-2">
+<h2 id="org15bc563">Reading the diff</h2>
+<div class="outline-text-2" id="text-org15bc563">
 <p>
 Lines that differ are highlighted; within a changed line, the specific
 characters that differ get a second, stronger highlight. Blank filler
@@ -294,9 +294,9 @@ you jump straight from hunk to hunk.
 </p>
 </div>
 </div>
-<div id="outline-container-org832cf53" class="outline-2">
-<h2 id="org832cf53">Copying changes across</h2>
-<div class="outline-text-2" id="text-org832cf53">
+<div id="outline-container-orgf90c2da" class="outline-2">
+<h2 id="orgf90c2da">Copying changes across</h2>
+<div class="outline-text-2" id="text-orgf90c2da">
 <p>
 Two commands, easy to keep straight once you know the mnemonic:
 </p>
@@ -319,7 +319,7 @@ anything is still left to reconcile.
 A typical loop looks like this:
 </p>
 
-<pre class="example" id="orgb42ddf1">
+<pre class="example" id="org6c9000b">
 ]c      " jump to the next diff
 do      " or dp, depending on which direction you want to copy
 ]c      " jump to the next one
@@ -327,14 +327,14 @@ do      " or dp, depending on which direction you want to copy
 </pre>
 </div>
 </div>
-<div id="outline-container-org8f59c4e" class="outline-2">
-<h2 id="org8f59c4e">Leaving diff mode</h2>
-<div class="outline-text-2" id="text-org8f59c4e">
+<div id="outline-container-org43d47b2" class="outline-2">
+<h2 id="org43d47b2">Leaving diff mode</h2>
+<div class="outline-text-2" id="text-org43d47b2">
 <p>
 Once you're done reconciling, turn diff mode off:
 </p>
 
-<pre class="example" id="orgdc21c9e">
+<pre class="example" id="orgb05b392">
 :diffoff
 </pre>
 
@@ -343,7 +343,7 @@ or, if you opened more than two windows and want to clear all of them
 at once:
 </p>
 
-<pre class="example" id="org0979c59">
+<pre class="example" id="org4d832bd">
 :diffoff!
 </pre>
 
@@ -354,9 +354,9 @@ you <code>do=/=dp</code> while it's active.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf4dcd15" class="outline-2">
-<h2 id="orgf4dcd15">Why this beats copy-paste</h2>
-<div class="outline-text-2" id="text-orgf4dcd15">
+<div id="outline-container-orgb3872c4" class="outline-2">
+<h2 id="orgb3872c4">Why this beats copy-paste</h2>
+<div class="outline-text-2" id="text-orgb3872c4">
 <p>
 The hunk boundaries are computed for you, both sides stay
 line-aligned as you go, and you get instant visual feedback after

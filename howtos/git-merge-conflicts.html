@@ -6,9 +6,8 @@
 <!-- 2026-09-19 Sat 07:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Homebrew without admin: getting the PATH right</title>
+<title>Resolving merge conflicts in git</title>
 <meta name="author" content="Tobias Yang" />
-<meta name="description" content="Installing Homebrew without admin rights on a corporate-managed Mac, and the PATH and bottle tradeoffs that come with a non-default prefix." />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -201,161 +200,167 @@
 <nav class="howto-nav"><a href="../index.html" class="logo"><img src="../static/favicon.png" alt="Logo"/></a><a href="https://github.com/Chimik-IT">About</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
-<h1 class="title">Homebrew without admin: getting the PATH right</h1>
+<h1 class="title">Resolving merge conflicts in git</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org740fac0">The problem</a></li>
-<li><a href="#org472ef1c">Installing into your own prefix</a></li>
-<li><a href="#org2626f43">Wiring up the environment</a></li>
-<li><a href="#org9259198">The catch: you lose most prebuilt bottles</a></li>
-<li><a href="#org8349078">PATH ordering: be deliberate</a></li>
-<li><a href="#orgac6959d">Why this is worth doing</a></li>
-<li><a href="#org1e168bf">Sources</a></li>
+<li><a href="#org6989e64">The problem</a></li>
+<li><a href="#orgfe0b257">Reading the conflict markers</a></li>
+<li><a href="#orga6825aa">Fixing it by hand</a></li>
+<li><a href="#org4740dec">git status as your checklist</a></li>
+<li><a href="#orgdc0721a">Bailing out instead</a></li>
+<li><a href="#orgdc288b7">Using vimdiff instead of hand-editing</a></li>
+<li><a href="#org7fdaec9">Why the markers are worth understanding directly</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org740fac0" class="outline-2">
-<h2 id="org740fac0">The problem</h2>
-<div class="outline-text-2" id="text-org740fac0">
+<div id="outline-container-org6989e64" class="outline-2">
+<h2 id="org6989e64">The problem</h2>
+<div class="outline-text-2" id="text-org6989e64">
 <p>
-Corporate-managed MacBooks (MDM-enrolled, no local admin, IT owns
-<code>sudo</code>) still leave you wanting a real package manager for dev tooling.
-The official Homebrew installer needs admin rights: it creates
-<code>/opt/homebrew</code> (Apple Silicon) or <code>/usr/local</code> (Intel) and <code>chown~s it
-to you via ~sudo</code>. On a locked-down corporate box that fails at the very
-first step. The good news: Homebrew is just files. You can put the whole
-thing anywhere your own account can write. No admin required.
+Two branches touched the same lines and git can't guess which version
+you want. It stops mid-merge, drops conflict markers into the affected
+files, and leaves the working tree in a half-merged state until you
+resolve it. Panicking or blindly picking "theirs" or "ours" is how you
+lose changes you actually needed. Reading the markers correctly is the
+whole skill.
 </p>
 </div>
 </div>
-<div id="outline-container-org472ef1c" class="outline-2">
-<h2 id="org472ef1c">Installing into your own prefix</h2>
-<div class="outline-text-2" id="text-org472ef1c">
+<div id="outline-container-orgfe0b257" class="outline-2">
+<h2 id="orgfe0b257">Reading the conflict markers</h2>
+<div class="outline-text-2" id="text-orgfe0b257">
 <p>
-No installer script, no root; just clone it into somewhere under your
-home directory:
+A conflicted hunk looks like this:
 </p>
 
-<div class="org-src-container">
-<pre class="src src-bash">git clone https://github.com/Homebrew/brew ~/homebrew
+<pre class="example" id="org846cead">
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+your current branch's version
+=======
+the incoming branch's version
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-branch
 </pre>
-</div>
 
 <p>
-That's the entire install. Nothing touched outside your home directory,
-nothing that needs IT approval. Worth being upfront about: this works
-because Homebrew's installation is literally that git repository, not
-because it's a documented, officially supported install path. Homebrew's
-own docs only describe installing to the default prefix
-(<a href="https://docs.brew.sh/Installation">docs.brew.sh/Installation</a>); everything below follows from that gap.
-</p>
-</div>
-</div>
-<div id="outline-container-org2626f43" class="outline-2">
-<h2 id="org2626f43">Wiring up the environment</h2>
-<div class="outline-text-2" id="text-org2626f43">
-<p>
-Homebrew ships a helper that prints the exact environment it needs;
-don't hand-roll this:
+Three things to keep straight:
 </p>
 
-<div class="org-src-container">
-<pre class="src src-bash">~/homebrew/bin/brew shellenv
-</pre>
-</div>
-
-<p>
-It sets more than just <code>PATH</code>: <code>MANPATH</code>, <code>INFOPATH</code>,
-<code>HOMEBREW_PREFIX</code>, <code>HOMEBREW_CELLAR</code>, <code>HOMEBREW_REPOSITORY</code>
-(<a href="https://docs.brew.sh/Manpage">docs.brew.sh/Manpage</a>). Eval it in
-your shell and persist it. macOS defaults to zsh since Catalina:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">echo 'eval "$(~/homebrew/bin/brew shellenv)"' &gt;&gt; ~/.zprofile
-source ~/.zprofile
-</pre>
-</div>
-
-<p>
-Verify:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">which brew
-brew --prefix
-# /Users/you/homebrew
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org9259198" class="outline-2">
-<h2 id="org9259198">The catch: you lose most prebuilt bottles</h2>
-<div class="outline-text-2" id="text-org9259198">
-<p>
-Homebrew's precompiled binaries ("bottles") are built assuming the
-default prefix (<code>/opt/homebrew</code> or <code>/usr/local</code>); install into
-<code>~/homebrew</code> instead and most formulae won't have a matching bottle,
-<code>brew</code> falls back to compiling from source. Homebrew's own FAQ is blunt
-about this: building from source "is not supported"
-(<a href="https://docs.brew.sh/FAQ">docs.brew.sh/FAQ</a>). In practice it mostly
-works, but you're off the path they test. That means you actually need
-Xcode Command Line Tools:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">xcode-select --install
-</pre>
-</div>
-
-<p>
-On a corporate box this may itself need admin, or may already be
-provisioned through the MDM's self-service catalog, worth checking
-before you assume the whole approach is blocked. Some IT departments
-push CLT by default precisely because so much tooling depends on it.
-</p>
-</div>
-</div>
-<div id="outline-container-org8349078" class="outline-2">
-<h2 id="org8349078">PATH ordering: be deliberate</h2>
-<div class="outline-text-2" id="text-org8349078">
-<p>
-<code>brew shellenv</code> prepends its prefix to <code>PATH</code>, so Homebrew binaries
-shadow system ones with the same name, usually what you want for dev
-tools (newer git, newer python). Be careful if your company wraps
-anything for compliance: e.g. a corporate <code>git</code> wrapper that adds
-logging or credential injection. Check <code>which git</code> (and anything else
-you're unsure about) after adding the eval line, rather than assuming
-you're still calling the wrapped version.
-</p>
-</div>
-</div>
-<div id="outline-container-orgac6959d" class="outline-2">
-<h2 id="orgac6959d">Why this is worth doing</h2>
-<div class="outline-text-2" id="text-orgac6959d">
-<p>
-Same motivation as the GPG/pass setup: one lightweight mechanism, no
-admin rights needed, no server, no vendor tie-in, just files under your
-own home directory that you can tar up, move to the next machine, or
-delete without filing a ticket.
-</p>
-</div>
-</div>
-<div id="outline-container-org1e168bf" class="outline-2">
-<h2 id="org1e168bf">Sources</h2>
-<div class="outline-text-2" id="text-org1e168bf">
 <ul class="org-ul">
-<li><a href="https://docs.brew.sh/Installation">Homebrew: Installation</a>, official docs, default-prefix requirement and Xcode CLT</li>
-<li><a href="https://docs.brew.sh/FAQ">Homebrew: FAQ</a>, on bottles requiring the default prefix</li>
-<li><a href="https://docs.brew.sh/Manpage">Homebrew: Manpage</a>, <code>brew shellenv</code> behavior</li>
+<li><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> down to <code>======</code> — what's currently on your branch</li>
+<li><code>======</code> down to <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; ...</code> — what's coming in from the branch
+you're merging</li>
+<li>The label after <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> names the incoming branch, so you always
+know which side is which without guessing</li>
 </ul>
 
 <p>
-The custom-prefix git-clone approach itself isn't in any of the above;
-it's not an officially documented install path, just a consequence of
-Homebrew being a plain git repository underneath.
+Nothing here is auto-resolved. Both versions are literally in the
+file, in full — you decide what the final content should be, which
+might be one side, the other, or a hand-merged combination of both.
+</p>
+</div>
+</div>
+<div id="outline-container-orga6825aa" class="outline-2">
+<h2 id="orga6825aa">Fixing it by hand</h2>
+<div class="outline-text-2" id="text-orga6825aa">
+<p>
+Open the file, decide what the merged result should look like, and
+delete everything you don't want — including the marker lines
+themselves. <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>======</code>, and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> are not valid file
+content; if any of them survive, you've got a broken file, not a
+resolved conflict.
+</p>
+
+<p>
+Once a file looks right:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git add path/to/file
+</pre>
+</div>
+
+<p>
+<code>git add</code> is also how you tell git "this conflict is resolved" — it's
+not just for staging new content.
+</p>
+</div>
+</div>
+<div id="outline-container-org4740dec" class="outline-2">
+<h2 id="org4740dec">git status as your checklist</h2>
+<div class="outline-text-2" id="text-org4740dec">
+<p>
+Mid-merge, <code>git status</code> lists every file still needing attention under
+"Unmerged paths". Work through that list; the moment it's empty, git
+lets you finish:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git commit
+</pre>
+</div>
+
+<p>
+No message needed — git pre-fills one naming the merge, and that's
+usually fine to keep.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdc0721a" class="outline-2">
+<h2 id="orgdc0721a">Bailing out instead</h2>
+<div class="outline-text-2" id="text-orgdc0721a">
+<p>
+If the merge is more trouble than it's worth right now, or you
+resolved something wrong and want a clean slate:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git merge --abort
+</pre>
+</div>
+
+<p>
+This resets you to exactly where you were before the merge started —
+no conflict markers, no half-resolved files, no trace of the attempt.
+Only works while the merge is still in progress, so use it before you
+commit.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdc288b7" class="outline-2">
+<h2 id="orgdc288b7">Using vimdiff instead of hand-editing</h2>
+<div class="outline-text-2" id="text-orgdc288b7">
+<p>
+If you'd rather see both sides lined up than scroll through inline
+markers, git can hand the conflict to
+<a href="vim-diff-copy.html">vimdiff</a> directly:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git mergetool --tool=vimdiff
+</pre>
+</div>
+
+<p>
+That opens each conflicted file as a four-way split — your version,
+the merged result, their version, and the common ancestor — and
+<code>do=/=dp</code> work the same way they do for any other vimdiff session.
+Once you save and quit, git treats the file as resolved and stages it
+for you, so you can skip the manual <code>git add</code> step for that file.
+</p>
+</div>
+</div>
+<div id="outline-container-org7fdaec9" class="outline-2">
+<h2 id="org7fdaec9">Why the markers are worth understanding directly</h2>
+<div class="outline-text-2" id="text-org7fdaec9">
+<p>
+Merge tools help, but they're a layer on top of the same three-way
+markers described above — not a replacement for reading them. A
+conflict you resolve by understanding what <code>HEAD</code> and the incoming
+branch actually contain is a conflict you resolve correctly the first
+time, tool or no tool.
 </p>
 </div>
 </div>
