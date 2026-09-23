@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-09-23 Mi 08:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>rsync --rsync-path="sudo rsync": root files over SSH without root login</title>
+<meta name="author" content="Tobias Yang" />
+<meta name="description" content="How --rsync-path=&quot;sudo rsync&quot; lets you copy root-owned files over SSH while root login stays disabled, what sudoers needs, and why it is effectively root access." />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" href="../static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="../static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="canonical" href="https://chimik-it.github.io/howtos/rsync-sudo.html"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="rsync --rsync-path=&quot;sudo rsync&quot;: root files over SSH without root login"/>
+<meta property="og:url" content="https://chimik-it.github.io/howtos/rsync-sudo.html"/>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="howto-nav"><a href="../index.html" class="logo"><img src="../static/favicon.png" alt="Logo"/></a><a href="https://github.com/Chimik-IT">About</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
+</div>
+<div id="content" class="content">
+<h1 class="title">rsync --rsync-path="sudo rsync": root files over SSH without root login</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgaf302ed">The problem</a></li>
+<li><a href="#org0b2fbde">What --rsync-path actually does</a></li>
+<li><a href="#orgc88bd4f">The catch: sudo can't ask for a password</a></li>
+<li><a href="#orgdbf4c7f">Be honest about what you just granted</a>
+<ul>
+<li><a href="#org3cdd4e1">Locking it down with rrsync</a></li>
+</ul>
+</li>
+<li><a href="#org6a3ccde">Gotchas worth knowing</a></li>
+<li><a href="#org869e6f4">Why this is worth doing</a></li>
+<li><a href="#org10e393c">Sources</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgaf302ed" class="outline-2">
+<h2 id="orgaf302ed">The problem</h2>
+<div class="outline-text-2" id="text-orgaf302ed">
+<p>
+Any sane server has <code>PermitRootLogin no</code> in <code>sshd_config</code>. You log in as
+your own user and use <code>sudo</code> for anything privileged. That works fine
+interactively, but falls apart as soon as you want to copy files that
+only root can read or write: <code>/etc</code>, container volumes under
+<code>/var/lib</code>, a database dump directory owned by <code>postgres</code>, a backup that
+has to keep ownership and permissions intact.
+</p>
+
+<p>
+The naive attempt:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">rsync -a admin@server:/etc/ ./backup/etc/
+</pre>
+</div>
+
+<p>
+ends in a wall of <code>Permission denied</code> for <code>/etc/shadow</code>,
+<code>/etc/ssl/private</code> and friends. rsync on the other side runs as
+<code>admin</code>, so it can only see what <code>admin</code> can see.
+</p>
+</div>
+</div>
+<div id="outline-container-org0b2fbde" class="outline-2">
+<h2 id="org0b2fbde">What --rsync-path actually does</h2>
+<div class="outline-text-2" id="text-org0b2fbde">
+<p>
+When you rsync over SSH, your local rsync doesn't talk to a daemon. It
+opens an SSH connection and starts a second rsync process on the remote
+host, roughly like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">ssh admin@server rsync --server --sender -logDtpre.iLsfxCIvu . /etc/
+</pre>
+</div>
+
+<p>
+The two processes then speak the rsync protocol over the SSH channel's
+stdin/stdout. <code>--rsync-path</code> replaces the word <code>rsync</code> in that remote
+command line. From the manpage: "Use this to specify what program is to
+be run on the remote machine to start-up rsync."
+</p>
+
+<p>
+So with
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">rsync -a --rsync-path="sudo rsync" admin@server:/etc/ ./backup/etc/
+</pre>
+</div>
+
+<p>
+the remote side becomes <code>sudo rsync --server ...</code>. You log in as
+<code>admin</code>, but the process that reads (or writes) the files runs as root.
+Root login stays disabled, your SSH key stays personal, and the audit
+trail in <code>/var/log/auth.log</code> shows who ran what.
+</p>
+
+<p>
+It works in both directions. Pulling from the server (remote side is
+the sender) and pushing to it (remote side is the receiver) both run the
+remote half through <code>sudo</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc88bd4f" class="outline-2">
+<h2 id="orgc88bd4f">The catch: sudo can't ask for a password</h2>
+<div class="outline-text-2" id="text-orgc88bd4f">
+<p>
+The remote rsync's stdin and stdout <i>are</i> the protocol channel. There's
+no terminal, so <code>sudo</code> has nowhere to prompt. You'll see one of:
+</p>
+
+<pre class="example" id="org6a02237">
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+rsync: connection unexpectedly closed (0 bytes received so far) [Receiver]
+</pre>
+
+<p>
+The fix is a <code>NOPASSWD</code> rule scoped to rsync. Always edit with
+<code>visudo</code>, and prefer a drop-in file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">sudo visudo -f /etc/sudoers.d/rsync
+</pre>
+</div>
+
+<pre class="example" id="orgcf1f546">
+admin ALL=(root) NOPASSWD: /usr/bin/rsync
+</pre>
+
+<p>
+Check the path with <code>command -v rsync</code> on the server; sudoers matches
+the full path. Then use <code>sudo -n</code> in the rsync path. <code>-n</code> makes sudo
+fail immediately instead of hanging if the rule doesn't match, which
+saves you a lot of head-scratching over a silently stuck transfer:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">rsync -a --rsync-path="sudo -n rsync" admin@server:/etc/ ./backup/etc/
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdbf4c7f" class="outline-2">
+<h2 id="orgdbf4c7f">Be honest about what you just granted</h2>
+<div class="outline-text-2" id="text-orgdbf4c7f">
+<p>
+<code>NOPASSWD: /usr/bin/rsync</code> looks narrow. It isn't. rsync as root with
+arguments you choose can overwrite any file on the system:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">rsync --rsync-path="sudo rsync" ./my_authorized_keys admin@server:/root/.ssh/authorized_keys
+</pre>
+</div>
+
+<p>
+That rule is root access, just spelled differently. Fine for your own
+admin account that has full sudo anyway (then it's purely a
+convenience). For a dedicated backup user, lock it down.
+</p>
+</div>
+<div id="outline-container-org3cdd4e1" class="outline-3">
+<h3 id="org3cdd4e1">Locking it down with rrsync</h3>
+<div class="outline-text-3" id="text-org3cdd4e1">
+<p>
+rsync ships a helper called <code>rrsync</code> (restricted rsync). Since rsync
+3.2.4 it's installed as <code>/usr/bin/rrsync</code> on most distros; older Debian
+packages keep it under <code>/usr/share/doc/rsync/scripts/</code>. It checks the
+requested command and only allows access below one directory, and
+optionally read-only.
+</p>
+
+<p>
+Pin the backup key to it in <code>~backup/.ssh/authorized_keys</code> on the
+server:
+</p>
+
+<pre class="example" id="org71ff89b">
+command="sudo -n /usr/bin/rrsync -ro /srv/data",restrict ssh-ed25519 AAAA... backup@nas
+</pre>
+
+<p>
+and allow only that in sudoers:
+</p>
+
+<pre class="example" id="org8ba4b24">
+Defaults!/usr/bin/rrsync env_keep += "SSH_ORIGINAL_COMMAND"
+backup ALL=(root) NOPASSWD: /usr/bin/rrsync -ro /srv/data
+</pre>
+
+<p>
+The <code>env_keep</code> line matters: sudo's <code>env_reset</code> strips the environment
+by default, and rrsync needs <code>SSH_ORIGINAL_COMMAND</code> to know what the
+client asked for. Without it rrsync just complains that it wasn't
+started from sshd.
+</p>
+
+<p>
+With a forced <code>command=</code> the client's <code>--rsync-path</code> is ignored anyway;
+sshd runs the forced command and rrsync reads the original request from
+<code>SSH_ORIGINAL_COMMAND</code>. The client just does:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">rsync -a backup@server:/ ./backup/data/
+</pre>
+</div>
+
+<p>
+Paths are now relative to <code>/srv/data</code>, writes are refused, and a stolen
+backup key can read that one directory and nothing else.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org6a3ccde" class="outline-2">
+<h2 id="org6a3ccde">Gotchas worth knowing</h2>
+<div class="outline-text-2" id="text-org6a3ccde">
+<ul class="org-ul">
+<li><b>sudo only covers the remote side.</b> Receiving files locally as a
+normal user means rsync can't <code>chown</code> them, so <code>-a</code> quietly loses
+ownership. Either run the local side as root too, or add
+<code>--fake-super</code> and let rsync store ownership in extended attributes.</li>
+<li><b>Local <code>sudo rsync</code> changes your SSH identity.</b> <code>sudo rsync -a ...</code>
+runs ssh as root, which reads <code>/root/.ssh/</code> instead of yours and
+can't see your agent. Point it at your key explicitly with
+<code>-e "ssh -i /home/you/.ssh/id_ed25519"</code>, or preserve <code>SSH_AUTH_SOCK</code>.</li>
+<li><b>Use <code>--numeric-ids</code> for backups.</b> Otherwise rsync maps users and
+groups by name, and <code>www-data</code> on the server may not be the same UID
+on the backup box.</li>
+<li><b>Full fidelity needs <code>-AXH</code>.</b> ACLs, extended attributes and hard
+links aren't part of <code>-a</code>. For system backups:
+<code>rsync -aAXH --numeric-ids --rsync-path</code>"sudo -n rsync" ...=</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org869e6f4" class="outline-2">
+<h2 id="org869e6f4">Why this is worth doing</h2>
+<div class="outline-text-2" id="text-org869e6f4">
+<p>
+It keeps the rule "nobody logs in as root" intact without making root
+files unreachable. No extra daemon, no second SSH server, no shared root
+key sitting on a NAS. One flag on the client, one line in sudoers, and
+with rrsync a setup where the backup key can do exactly one thing.
+</p>
+</div>
+</div>
+<div id="outline-container-org10e393c" class="outline-2">
+<h2 id="org10e393c">Sources</h2>
+<div class="outline-text-2" id="text-org10e393c">
+<ul class="org-ul">
+<li><a href="https://download.samba.org/pub/rsync/rsync.1">rsync(1) manpage</a>, <code>--rsync-path</code>, <code>--fake-super</code>, <code>--numeric-ids</code></li>
+<li><a href="https://download.samba.org/pub/rsync/rrsync.1">rrsync(1) manpage</a>, restricted rsync for forced commands</li>
+<li><a href="https://www.sudo.ws/docs/man/sudoers.man/">sudoers(5)</a>, <code>NOPASSWD</code> and command matching</li>
+<li><a href="https://man.openbsd.org/sshd.8#AUTHORIZED_KEYS_FILE_FORMAT">sshd(8)</a>, <code>command=</code> and <code>restrict</code> in authorized_keys</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p>Tobias Yang (楊濤比) · <a href="https://github.com/Chimik-IT">github.com/Chimik-IT</a></p><script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;function apply(t){document.documentElement.setAttribute('data-theme',t);}b.addEventListener('click',function(){var sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var now=document.documentElement.getAttribute('data-theme')||sys;var next=now==='dark'?'light':'dark';apply(next);localStorage.setItem('theme',next);});})();</script>
+</div>
+</body>
+</html>
