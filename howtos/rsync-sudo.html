@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-09-23 Mi 08:21 -->
+<!-- 2026-09-23 Mi 09:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>rsync --rsync-path="sudo rsync": root files over SSH without root login</title>
+<title>Copy root-owned files over SSH: run the remote rsync through sudo</title>
 <meta name="author" content="Tobias Yang" />
 <meta name="description" content="How --rsync-path=&quot;sudo rsync&quot; lets you copy root-owned files over SSH while root login stays disabled, what sudoers needs, and why it is effectively root access." />
 <meta name="generator" content="Org Mode" />
@@ -197,7 +197,7 @@
 <link rel="stylesheet" href="../static/css/style.css" type="text/css"/><link rel="icon" type="image/png" href="../static/favicon.png"/><script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="canonical" href="https://chimik-it.github.io/howtos/rsync-sudo.html"/>
 <meta property="og:type" content="article"/>
-<meta property="og:title" content="rsync --rsync-path=&quot;sudo rsync&quot;: root files over SSH without root login"/>
+<meta property="og:title" content="Copy root-owned files over SSH: run the remote rsync through sudo"/>
 <meta property="og:url" content="https://chimik-it.github.io/howtos/rsync-sudo.html"/>
 </head>
 <body>
@@ -205,7 +205,7 @@
 <nav class="howto-nav"><a href="../index.html" class="logo"><img src="../static/favicon.png" alt="Logo"/></a><a href="https://github.com/Chimik-IT">About</a><button id="theme-toggle" aria-label="Toggle color theme">◐</button></nav>
 </div>
 <div id="content" class="content">
-<h1 class="title">rsync --rsync-path="sudo rsync": root files over SSH without root login</h1>
+<h1 class="title">Copy root-owned files over SSH: run the remote rsync through sudo</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
@@ -304,7 +304,7 @@ The remote rsync's stdin and stdout <i>are</i> the protocol channel. There's
 no terminal, so <code>sudo</code> has nowhere to prompt. You'll see one of:
 </p>
 
-<pre class="example" id="org6a02237">
+<pre class="example" id="org8ab24b8">
 sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
 sudo: a password is required
 rsync: connection unexpectedly closed (0 bytes received so far) [Receiver]
@@ -320,7 +320,7 @@ The fix is a <code>NOPASSWD</code> rule scoped to rsync. Always edit with
 </pre>
 </div>
 
-<pre class="example" id="orgcf1f546">
+<pre class="example" id="orgf7b599d">
 admin ALL=(root) NOPASSWD: /usr/bin/rsync
 </pre>
 
@@ -372,7 +372,7 @@ Pin the backup key to it in <code>~backup/.ssh/authorized_keys</code> on the
 server:
 </p>
 
-<pre class="example" id="org71ff89b">
+<pre class="example" id="orgbc50596">
 command="sudo -n /usr/bin/rrsync -ro /srv/data",restrict ssh-ed25519 AAAA... backup@nas
 </pre>
 
@@ -380,7 +380,7 @@ command="sudo -n /usr/bin/rrsync -ro /srv/data",restrict ssh-ed25519 AAAA... bac
 and allow only that in sudoers:
 </p>
 
-<pre class="example" id="org8ba4b24">
+<pre class="example" id="org439c433">
 Defaults!/usr/bin/rrsync env_keep += "SSH_ORIGINAL_COMMAND"
 backup ALL=(root) NOPASSWD: /usr/bin/rrsync -ro /srv/data
 </pre>
